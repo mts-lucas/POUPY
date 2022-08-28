@@ -4,6 +4,12 @@ from sys import exit
 
 pygame.init()
 
+#musica de fundo do jogo
+
+pygame.mixer.music.set_volume(0.50)
+pygame.mixer.music.load("trilha sonora/BoxCat Games - Young Love.mp3")
+pygame.mixer.music.play(-1)
+
 # trecho dedicado a janela do jogo
 
 largura_janela = 400
@@ -25,3 +31,5 @@ while True:
             exit()
 
     pygame.display.update()
+
+#Fim do trecho da janela
