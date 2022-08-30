@@ -9,3 +9,7 @@ class Poupy(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite(self)
+
+    
+    def andar(self):
+        pass
