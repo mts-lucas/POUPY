@@ -16,7 +16,7 @@ largura_janela = 640
 altura_janela = 480
 
 
-tela_fundo = pygame.image.load('telafundo.png1').convert()
+tela_fundo = pygame.image.load('sprites/telafundo.png')
 tela_fundo = pygame.transform.scale(tela_fundo, (largura_janela, altura_janela))
 tela_jogo = pygame.display.set_mode((largura_janela, altura_janela))
 pygame.display.set_caption("Poupy")
