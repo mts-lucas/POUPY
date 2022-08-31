@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from sys import exit
-import os
+# import os
 from classes import Poupy
 
 pygame.init()
@@ -28,6 +28,8 @@ altura_janela = 480
 
 
 
+
+
 tela_fundo = pygame.image.load('sprites/telafundo.png')
 tela_fundo = pygame.transform.scale(tela_fundo, (largura_janela, altura_janela))
 
@@ -49,6 +51,7 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             exit()
+
 
     tela_jogo.blit(tela_fundo, (0, 0))
     todas_as_sprites.draw(tela_jogo)
