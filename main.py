@@ -50,9 +50,6 @@ while True:
             pygame.quit()
             exit()
 
-        if pygame.key.get_pressed()[K_d]:
-            bixinho.andar_direita()
-
     tela_jogo.blit(tela_fundo, (0, 0))
     todas_as_sprites.draw(tela_jogo)
     todas_as_sprites.update()
