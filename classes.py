@@ -20,7 +20,7 @@ class Poupy(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         # setando os sprites de cada direção
         self.img_stoped = []
-        for i in range(43):
+        for i in range(3):
             img = sprite_sheet.subsurface((i * 120, 0), (120, 130))
             self.img_stoped.append(img)
 
@@ -64,8 +64,8 @@ class Poupy(pygame.sprite.Sprite):
             self.update_action(1)
         elif pygame.key.get_pressed()[K_w]:
             self.update_action(3)
-        elif not pygame.key.get_pressed:
-            self.update_action(0)
+        # elif not pygame.key.get_pressed:
+        #     self.update_action(0)
 
         if self.action == 0:
             self.image = self.img_stoped[int(self.index_frame)]
@@ -78,21 +78,25 @@ class Poupy(pygame.sprite.Sprite):
             self.index_frame += 0.2
             if self.index_frame >= len(self.img_down):
                 self.index_frame = 0
+                self.update_action(0)
         elif self.action == 2:
             self.image = self.img_left[int(self.index_frame)]
             self.index_frame += 0.2
             if self.index_frame >= len(self.img_left):
                 self.index_frame = 0
+                self.update_action(0)
         elif self.action == 3:
             self.image = self.img_up[int(self.index_frame)]
             self.index_frame += 0.2
             if self.index_frame >= len(self.img_up):
                 self.index_frame = 0
+                self.update_action(0)
         elif self.action == 4:
             self.image = self.img_right[int(self.index_frame)]
             self.index_frame += 0.2
             if self.index_frame >= len(self.img_right):
                 self.index_frame = 0
+                self.update_action(0)
 
         self.image = pygame.transform.scale(self.image, (120, 130))
 
