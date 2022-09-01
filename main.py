@@ -53,6 +53,15 @@ while True:
             exit()
 
 
+    if bixinho.rect.x > largura_janela - 120:
+        bixinho.rect.x = largura_janela - 120
+    if bixinho.rect.x < 0:
+        bixinho.rect.x = 0
+    if bixinho.rect.y < 200:
+        bixinho.rect.y = 200
+    if bixinho.rect.y > altura_janela - 130:
+        bixinho.rect.y = altura_janela - 130
+
     tela_jogo.blit(tela_fundo, (0, 0))
     todas_as_sprites.draw(tela_jogo)
     todas_as_sprites.update()

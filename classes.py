@@ -1,7 +1,7 @@
-from turtle import update
 import pygame
 from pygame.locals import *
 import os
+from random import randint
 
 
 pygame.init()
@@ -52,7 +52,6 @@ class Poupy(pygame.sprite.Sprite):
 
         self.x = 300
         self.y = 300
-        # self.rect.center = (self.x, self.y)
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
 
@@ -67,8 +66,6 @@ class Poupy(pygame.sprite.Sprite):
             self.update_action(1)
         elif pygame.key.get_pressed()[K_w]:
             self.update_action(3)
-        # elif not pygame.key.get_pressed:
-        #     self.update_action(0)
 
         if self.action == 0:
             self.image = self.img_stoped[int(self.index_frame)]
@@ -79,28 +76,31 @@ class Poupy(pygame.sprite.Sprite):
         elif self.action == 1:
             self.image = self.img_down[int(self.index_frame)]
             self.index_frame += 0.2
-            # self.y += 20
+            self.rect.y += 2
             if self.index_frame >= len(self.img_down):
                 self.index_frame = 0
                 self.update_action(0)
+
         elif self.action == 2:
             self.image = self.img_left[int(self.index_frame)]
             self.index_frame += 0.2
-            # self.x -= 20 
+            self.rect.x -= 2
             if self.index_frame >= len(self.img_left):
                 self.index_frame = 0
                 self.update_action(0)
+
         elif self.action == 3:
             self.image = self.img_up[int(self.index_frame)]
             self.index_frame += 0.2
-            # self.y -= 20
+            self.rect.y -= 2
             if self.index_frame >= len(self.img_up):
                 self.index_frame = 0
                 self.update_action(0)
+
         elif self.action == 4:
             self.image = self.img_right[int(self.index_frame)]
             self.index_frame += 0.2
-            # self.x -= 20 
+            self.rect.x += 2
             if self.index_frame >= len(self.img_right):
                 self.index_frame = 0
                 self.update_action(0)
