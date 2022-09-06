@@ -48,8 +48,12 @@ class Poupy(pygame.sprite.Sprite):
         self.index_frame = 0
         self.image = self.img_stoped[self.index_frame]
         self.image = pygame.transform.scale(self.image, (120, 130))
+
         self.rect = self.image.get_rect()
 
+        self.timer_andar = pygame.USEREVENT + 1
+        pygame.time.set_timer(self.timer_andar, 3000)
+        self.newx = 300
         self.x = 300
         self.y = 300
         self.rect = self.image.get_rect()
@@ -58,14 +62,28 @@ class Poupy(pygame.sprite.Sprite):
 
     def update(self):
 
-        if pygame.key.get_pressed()[K_d]:
-            self.update_action(4)
-        elif pygame.key.get_pressed()[K_a]:
-            self.update_action(2)
-        elif pygame.key.get_pressed()[K_s]:
-            self.update_action(1)
-        elif pygame.key.get_pressed()[K_w]:
-            self.update_action(3)
+        # if pygame.key.get_pressed()[K_d]:
+        #     self.update_action(4)
+        # elif pygame.key.get_pressed()[K_a]:
+        #     self.update_action(2)
+        # elif pygame.key.get_pressed()[K_s]:
+        #     self.update_action(1)
+        # elif pygame.key.get_pressed()[K_w]:
+        #     self.update_action(3)]
+
+        if self.newx != self.rect.x:
+            if self.newx > self.rect.x:
+                self.update_action(4)
+                if (self.rect.x + 2) > self.newx:
+                    self.newx = self.rect.x 
+
+            elif self.newx < self.rect.x:
+                self.update_action(2)
+                if (self.rect.x - 2) < self.newx:
+                    self.newx = self.rect.x 
+
+        if self.newx == self.rect.x:
+            self.update_action(0)
 
         if self.action == 0:
             self.image = self.img_stoped[int(self.index_frame)]
@@ -73,13 +91,13 @@ class Poupy(pygame.sprite.Sprite):
             if self.index_frame >= len(self.img_stoped):
                 self.index_frame = 0
 
-        elif self.action == 1:
-            self.image = self.img_down[int(self.index_frame)]
-            self.index_frame += 0.2
-            self.rect.y += 2
-            if self.index_frame >= len(self.img_down):
-                self.index_frame = 0
-                self.update_action(0)
+        # elif self.action == 1:
+        #     self.image = self.img_down[int(self.index_frame)]
+        #     self.index_frame += 0.2
+        #     self.rect.y += 2
+        #     if self.index_frame >= len(self.img_down):
+        #         self.index_frame = 0
+        #         self.update_action(0)
 
         elif self.action == 2:
             self.image = self.img_left[int(self.index_frame)]
@@ -89,13 +107,13 @@ class Poupy(pygame.sprite.Sprite):
                 self.index_frame = 0
                 self.update_action(0)
 
-        elif self.action == 3:
-            self.image = self.img_up[int(self.index_frame)]
-            self.index_frame += 0.2
-            self.rect.y -= 2
-            if self.index_frame >= len(self.img_up):
-                self.index_frame = 0
-                self.update_action(0)
+        # elif self.action == 3:
+        #     self.image = self.img_up[int(self.index_frame)]
+        #     self.index_frame += 0.2
+        #     self.rect.y -= 2
+        #     if self.index_frame >= len(self.img_up):
+        #         self.index_frame = 0
+        #         self.update_action(0)
 
         elif self.action == 4:
             self.image = self.img_right[int(self.index_frame)]

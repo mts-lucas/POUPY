@@ -3,6 +3,7 @@ from pygame.locals import *
 from sys import exit
 # import os
 from classes import Poupy
+from random import randint
 
 pygame.init()
 
@@ -51,6 +52,10 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             exit()
+
+        if event.type == bixinho.timer_andar:
+            bixinho.newx = randint(0, 520)
+                
 
 
     if bixinho.rect.x > largura_janela - 120:
