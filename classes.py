@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 import os
-from random import randint
+# from random import randint
 
 
 pygame.init()
@@ -159,3 +159,8 @@ class Poupy(pygame.sprite.Sprite):
         if new_action != self.action:
             self.action = new_action
             self.index_frame = 0
+
+class Comida():
+    def __init__(self):
+        
+    
