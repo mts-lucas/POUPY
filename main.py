@@ -55,6 +55,7 @@ while True:
 
         if event.type == bixinho.timer_andar:
             bixinho.newx = randint(0, 520)
+            bixinho.newy = randint(200, 350)
                 
 
 
