@@ -160,7 +160,7 @@ class Poupy(pygame.sprite.Sprite):
             self.action = new_action
             self.index_frame = 0
 
-class Comida():
+class Comida(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.comida_parada = sprite_sheet.subsurface((0, 0), (32, 32))
