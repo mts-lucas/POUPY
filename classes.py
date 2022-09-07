@@ -10,6 +10,7 @@ diretorio_principal = os.path.dirname(__file__)
 diretorio_imagens = os.path.join(diretorio_principal, 'sprites')
 diretorio_sons = os.path.join(diretorio_principal, 'trilha sonora')
 sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'link_sprites.png'))
+sprite_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple.png'))
 
 # criando a classe do bichinho virtual
 
@@ -163,10 +164,10 @@ class Poupy(pygame.sprite.Sprite):
 class Comida(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.comida_parada = sprite_sheet.subsurface((0, 0), (32, 32))
+        self.comida_parada = sprite_comida.subsurface((0, 0), (32, 32))
         self.sendo_comida = []
         for i in range(0,5):
-            img = sprite_sheet.subsurface((i * 32 , 0), (32, 32))
+            img = sprite_comida.subsurface((i * 32 , 0), (32, 32))
             self.sendo_comida.append(img)
         self.index_frame_maca = 0
         self.image = self.comida_parada
