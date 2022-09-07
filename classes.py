@@ -64,7 +64,7 @@ class Poupy(pygame.sprite.Sprite):
     def update(self):
 
         if self.newx != self.rect.x:
-            if self.newx > self.rect.x and (self.newx > self.rect.x + 120 or self.newx < self.rect.x - 120 ):
+            if self.newx > self.rect.x:
                 self.update_action(4)
                 if (self.rect.x + 2) > self.newx:
                     self.newx = self.rect.x 
@@ -74,7 +74,7 @@ class Poupy(pygame.sprite.Sprite):
                     elif self.newy < self.rect.y:
                         self.update_action(3)
 
-            elif self.newx < self.rect.x and (self.newx > self.rect.x + 120 or self.newx < self.rect.x - 120 ):
+            elif self.newx < self.rect.x:
                 self.update_action(2)
                 if (self.rect.x - 2) < self.newx:
                     self.newx = self.rect.x 
@@ -84,7 +84,7 @@ class Poupy(pygame.sprite.Sprite):
                     elif self.newy < self.rect.y:
                         self.update_action(3)
 
-            elif self.newy < self.rect.y and (self.newx > self.rect.x + 120 or self.newx < self.rect.x - 120 ):
+            elif self.newy < self.rect.y and self.newx < self.rect.x + 240 and self.newx > self.rect.x - 120 :
                 self.update_action(3)
                 if (self.rect.y - 2) < self.newy:
                     self.newy = self.rect.y 
@@ -94,7 +94,7 @@ class Poupy(pygame.sprite.Sprite):
                     elif self.newx < self.rect.x:
                         self.update_action(2)
 
-            elif self.newy > self.rect.y and (self.newx > self.rect.x + 120 or self.newx < self.rect.x - 120 ):
+            elif self.newy > self.rect.y and self.newx < self.rect.x + 240 and self.newx > self.rect.x - 120:
                 self.update_action(1)
                 if (self.rect.y + 2) < self.newy:
                     self.newy = self.rect.y 
@@ -162,5 +162,13 @@ class Poupy(pygame.sprite.Sprite):
 
 class Comida():
     def __init__(self):
-        
+        pygame.sprite.Sprite.__init__(self)
+        self.comida_parada = sprite_sheet.subsurface((0, 0), (32, 32))
+        self.sendo_comida = []
+        for i in range(0,5):
+            img = sprite_sheet.subsurface((i * 32 , 0), (32, 32))
+            self.sendo_comida.append(img)
+        self.index_frame_maca = 0
+        self.image = self.comida_parada
+        self.image = pygame.transform.scale(self.image, (32, 32))
     
