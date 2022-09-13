@@ -173,15 +173,21 @@ class Alimento(pygame.sprite.Sprite):
         self.image = self.comida_parada
         self.image = pygame.transform.scale(self.image, (32, 32))
         self.start_comer = False
+        self.caindo = False
 
         #eles tem q receber as coordenadas do mouse na tela
-        self.x = 300
-        self.y = 300
+        self.timer_surgir = pygame.USEREVENT + 2
+        pygame.time.set_timer(self.timer_surgir, 5000)
+        self.x = 100
+        self.y = 100
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
 
     def sendo_comido(self):
         self.start_comer = True
+
+    def cair(self):
+        self.caindo = True
         
     def update(self):
         if self.start_comer == True:
@@ -189,5 +195,11 @@ class Alimento(pygame.sprite.Sprite):
             self.index_frame_maca += 0.05
             if self.index_frame_maca >= len(self.sendo_comida):
                 self.index_frame_maca = 5
+
+        if self.caindo == True:
+            self.rect.y += 5
+            if self.rect.y == 300:
+                self.caindo = False
+                pygame.time.set_timer(self.timer_surgir, 0)
                 
         self.image = pygame.transform.scale(self.image, (32, 32))

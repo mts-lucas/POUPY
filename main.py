@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 from sys import exit
 # import os
-from classes import Poupy
+from classes import Poupy, Alimento
 from random import randint
 
 pygame.init()
@@ -40,7 +40,9 @@ relogio_jogo = pygame.time.Clock()
 
 todas_as_sprites = pygame.sprite.Group()
 bixinho = Poupy()
+maca = Alimento()
 todas_as_sprites.add(bixinho)
+todas_as_sprites.add(maca)
 
 while True:
 
@@ -57,6 +59,10 @@ while True:
             bixinho.newx = randint(0, 520)
             bixinho.newy = randint(200, 350)
                 
+        if event.type == maca.timer_surgir:
+                # maca.rect.x = randint(0, 608)
+                # maca.rect.y = randint(100, 200)
+                maca.cair()
 
 
     if bixinho.rect.x > largura_janela - 120:
