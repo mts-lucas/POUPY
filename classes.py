@@ -174,8 +174,20 @@ class Alimento(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (32, 32))
         self.start_comer = False
 
+        #eles tem q receber as coordenadas do mouse na tela
+        self.x = 300
+        self.y = 300
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.x, self.y
+
     def sendo_comido(self):
         self.start_comer = True
-
+        
     def update(self):
-        pass
+        if self.start_comer == True:
+            self.image = self.sendo_comida[int(self.index_frame_maca)]
+            self.index_frame_maca += 0.05
+            if self.index_frame_maca >= len(self.sendo_comida):
+                self.index_frame_maca = 5
+                
+        self.image = pygame.transform.scale(self.image, (32, 32))
