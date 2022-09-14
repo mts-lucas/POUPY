@@ -11,6 +11,7 @@ diretorio_imagens = os.path.join(diretorio_principal, 'sprites')
 diretorio_sons = os.path.join(diretorio_principal, 'trilha sonora')
 sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'link_sprites.png'))
 sprite_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple.png'))
+sprite_but_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple_button.png'))
 
 # criando a classe do bichinho virtual
 
@@ -203,3 +204,13 @@ class Alimento(pygame.sprite.Sprite):
                 pygame.time.set_timer(self.timer_surgir, 0)
                 
         self.image = pygame.transform.scale(self.image, (32, 32))
+
+class Alimento_Button(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.img_button = sprite_but_comida.subsurface((0, 0), (64, 64))
+        self.botao_clicado = False
+
+    
+    def update(self):
+        if sel
