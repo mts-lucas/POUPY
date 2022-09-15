@@ -205,8 +205,16 @@ class Alimento(pygame.sprite.Sprite):
             else:
                 self.rect.y += 5
                 #comparar com o ysolto para calcular uma distancia com base na inicial
-                if self.rect.y == 300:
-                    self.caindo = False
+                if self.y_solto >= 200 and self.y_solto < 300:
+                    if self.rect.y == 330:
+                        self.caindo = False
+                if self.y_solto >= 100 and self.y_solto < 200:
+                    if self.rect.y == 380:
+                        self.caindo = False
+                if self.y_solto >= 0 and self.y_solto < 100:
+                    if self.rect.y == 406:
+                        self.caindo = False
+
         if self.solto == False:
             if pygame.mouse.get_pressed()[0] == True:
                 self.rect.x, self.rect.y = pygame.mouse.get_pos()
