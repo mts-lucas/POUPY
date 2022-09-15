@@ -163,7 +163,8 @@ class Poupy(pygame.sprite.Sprite):
             self.index_frame = 0
 
 class Alimento(pygame.sprite.Sprite):
-    def __init__(self):
+
+    def __init__(self, mouse_pos):
         pygame.sprite.Sprite.__init__(self)
         self.comida_parada = sprite_comida.subsurface((0, 0), (32, 32))
         self.sendo_comida = []
@@ -177,10 +178,9 @@ class Alimento(pygame.sprite.Sprite):
         self.caindo = False
 
         #eles tem q receber as coordenadas do mouse na tela
-        self.timer_surgir = pygame.USEREVENT + 2
-        pygame.time.set_timer(self.timer_surgir, 5000)
-        self.x = 100
-        self.y = 100
+        # self.timer_surgir = pygame.USEREVENT + 2
+        # pygame.time.set_timer(self.timer_surgir, 5000)
+        self.x, self.y = mouse_pos
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
 
@@ -201,7 +201,10 @@ class Alimento(pygame.sprite.Sprite):
             self.rect.y += 5
             if self.rect.y == 300:
                 self.caindo = False
-                pygame.time.set_timer(self.timer_surgir, 0)
+        if pygame.mouse.get_pressed()[0] == True:
+            self.rect.x, self.rect.y = pygame.mouse.get_pos()
+        if pygame.mouse.get_pressed()[0] == False and self.rect.y <= 300:
+            self.cair() 
                 
         self.image = pygame.transform.scale(self.image, (32, 32))
 
@@ -210,7 +213,18 @@ class Alimento_Button(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.img_button = sprite_but_comida.subsurface((0, 0), (64, 64))
         self.botao_clicado = False
-
+        self.image = self.img_button
+        self.image = pygame.transform.scale(self.image, (64, 64))
+        self.x = 288
+        self.y = 416
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.x, self.y
     
     def update(self):
-        if sel
+
+        self.image = pygame.transform.scale(self.image, (64, 64))
+
+
+# usar depois na classe da fruta 
+
+# if botao_comida.rect.collidepoint(mouse_pos) and mouse_button1 == True:

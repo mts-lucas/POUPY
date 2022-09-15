@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 from sys import exit
 # import os
-from classes import Poupy, Alimento
+from classes import Poupy, Alimento, Alimento_Button
 from random import randint
 
 pygame.init()
@@ -40,11 +40,17 @@ relogio_jogo = pygame.time.Clock()
 
 todas_as_sprites = pygame.sprite.Group()
 bixinho = Poupy()
-maca = Alimento()
+# maca = Alimento()
+botao_comida = Alimento_Button()
 todas_as_sprites.add(bixinho)
-todas_as_sprites.add(maca)
+# todas_as_sprites.add(maca)
+todas_as_sprites.add(botao_comida)
+
 
 while True:
+
+    mouse_pos = pygame.mouse.get_pos()
+    mouse_button1 = pygame.mouse.get_pressed()[0]
 
     relogio_jogo.tick(60)  # 30 fps
     tela_jogo.fill((0, 0, 0))  # cor da tela preta
@@ -59,10 +65,12 @@ while True:
             bixinho.newx = randint(0, 520)
             bixinho.newy = randint(200, 350)
                 
-        if event.type == maca.timer_surgir:
-                # maca.rect.x = randint(0, 608)
-                # maca.rect.y = randint(100, 200)
-                maca.cair()
+
+        if event.type == MOUSEBUTTONDOWN:
+            if event.button == 1 and botao_comida.rect.collidepoint(mouse_pos):
+                maca = Alimento(mouse_pos)
+                todas_as_sprites.add(maca)
+
 
 
     if bixinho.rect.x > largura_janela - 120:
@@ -73,6 +81,7 @@ while True:
         bixinho.rect.y = 200
     if bixinho.rect.y > altura_janela - 130:
         bixinho.rect.y = altura_janela - 130
+
 
     tela_jogo.blit(tela_fundo, (0, 0))
     todas_as_sprites.draw(tela_jogo)
