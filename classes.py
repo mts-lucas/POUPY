@@ -200,18 +200,22 @@ class Alimento(pygame.sprite.Sprite):
                 self.index_frame_maca = 5
 
         if self.caindo == True:
-            self.rect.y += 5
-            if self.rect.y == 300:
+            if self.y_solto >= 300:
                 self.caindo = False
+            else:
+                self.rect.y += 5
+                #comparar com o ysolto para calcular uma distancia com base na inicial
+                if self.rect.y == 300:
+                    self.caindo = False
         if self.solto == False:
             if pygame.mouse.get_pressed()[0] == True:
                 self.rect.x, self.rect.y = pygame.mouse.get_pos()
 
             else:
+                self.y_solto = self.rect.y
                 self.cair()
                 self.solto = True
-        # if self == True:    
-        #     self.cair()
+ 
 
                 
         self.image = pygame.transform.scale(self.image, (32 * 2, 32 * 2))

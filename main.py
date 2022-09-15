@@ -25,11 +25,6 @@ pygame.mixer.music.play(-1)
 largura_janela = 640
 altura_janela = 480
 
-#criando a classe do bixinho:
-
-
-
-
 
 tela_fundo = pygame.image.load('sprites/telafundo.png')
 tela_fundo = pygame.transform.scale(tela_fundo, (largura_janela, altura_janela))
