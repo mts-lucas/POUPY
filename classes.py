@@ -173,9 +173,11 @@ class Alimento(pygame.sprite.Sprite):
             self.sendo_comida.append(img)
         self.index_frame_maca = 0
         self.image = self.comida_parada
-        self.image = pygame.transform.scale(self.image, (32, 32))
+        self.image = pygame.transform.scale(self.image, (32 * 2, 32 * 2))
         self.start_comer = False
         self.caindo = False
+        self.solto = False
+        self.y_solto = None
 
         #eles tem q receber as coordenadas do mouse na tela
         # self.timer_surgir = pygame.USEREVENT + 2
@@ -201,12 +203,18 @@ class Alimento(pygame.sprite.Sprite):
             self.rect.y += 5
             if self.rect.y == 300:
                 self.caindo = False
-        if pygame.mouse.get_pressed()[0] == True:
-            self.rect.x, self.rect.y = pygame.mouse.get_pos()
-        if pygame.mouse.get_pressed()[0] == False and self.rect.y <= 300:
-            self.cair() 
+        if self.solto == False:
+            if pygame.mouse.get_pressed()[0] == True:
+                self.rect.x, self.rect.y = pygame.mouse.get_pos()
+
+            else:
+                self.cair()
+                self.solto = True
+        # if self == True:    
+        #     self.cair()
+
                 
-        self.image = pygame.transform.scale(self.image, (32, 32))
+        self.image = pygame.transform.scale(self.image, (32 * 2, 32 * 2))
 
 class Alimento_Button(pygame.sprite.Sprite):
     def __init__(self):
@@ -214,15 +222,15 @@ class Alimento_Button(pygame.sprite.Sprite):
         self.img_button = sprite_but_comida.subsurface((0, 0), (64, 64))
         self.botao_clicado = False
         self.image = self.img_button
-        self.image = pygame.transform.scale(self.image, (64, 64))
-        self.x = 288
-        self.y = 416
+        self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
+        self.x = 272
+        self.y = 374
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
     
     def update(self):
 
-        self.image = pygame.transform.scale(self.image, (64, 64))
+        self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
 
 
 # usar depois na classe da fruta 

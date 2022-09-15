@@ -40,10 +40,8 @@ relogio_jogo = pygame.time.Clock()
 
 todas_as_sprites = pygame.sprite.Group()
 bixinho = Poupy()
-# maca = Alimento()
 botao_comida = Alimento_Button()
 todas_as_sprites.add(bixinho)
-# todas_as_sprites.add(maca)
 todas_as_sprites.add(botao_comida)
 
 
