@@ -11,3 +11,4 @@ The game model was made based on games like POU(hence the name of the project), 
 ## Creator's Notes
 
 - At the end of the project, I will try to generate an .exe file for anyone who wants to test the game, regardless of having python installed on the machine.
+- All sprites used in project at this moment, are temporary. At end of project the final sprites will be inserted.
