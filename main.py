@@ -27,7 +27,8 @@ altura_janela = 480
 
 
 tela_fundo = pygame.image.load('sprites/telafundo.png')
-tela_fundo = pygame.transform.scale(tela_fundo, (largura_janela, altura_janela))
+tela_fundo = pygame.transform.scale(
+    tela_fundo, (largura_janela, altura_janela))
 
 tela_jogo = pygame.display.set_mode((largura_janela, altura_janela))
 pygame.display.set_caption("Poupy")
@@ -57,14 +58,15 @@ while True:
         if event.type == bixinho.timer_andar:
             bixinho.newx = randint(0, 520)
             bixinho.newy = randint(200, 350)
-                
 
         if event.type == MOUSEBUTTONDOWN:
             if event.button == 1 and botao_comida.rect.collidepoint(mouse_pos):
                 maca = Alimento(mouse_pos)
                 todas_as_sprites.add(maca)
 
-
+        if event.type == pygame.USEREVENT + 2:
+                todas_as_sprites.remove(maca)
+                del maca
 
     if bixinho.rect.x > largura_janela - 120:
         bixinho.rect.x = largura_janela - 120
@@ -74,7 +76,6 @@ while True:
         bixinho.rect.y = 200
     if bixinho.rect.y > altura_janela - 130:
         bixinho.rect.y = altura_janela - 130
-
 
     tela_jogo.blit(tela_fundo, (0, 0))
     todas_as_sprites.draw(tela_jogo)

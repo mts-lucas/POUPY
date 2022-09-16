@@ -178,6 +178,10 @@ class Alimento(pygame.sprite.Sprite):
         self.caindo = False
         self.solto = False
         self.y_solto = None
+        self.y_chao = None
+        self.sumir = pygame.USEREVENT + 2
+        pygame.time.set_timer(self.sumir, 5000)
+
 
         #eles tem q receber as coordenadas do mouse na tela
         # self.timer_surgir = pygame.USEREVENT + 2
@@ -204,15 +208,19 @@ class Alimento(pygame.sprite.Sprite):
                 self.caindo = False
             else:
                 self.rect.y += 5
-                #comparar com o ysolto para calcular uma distancia com base na inicial
+                
                 if self.y_solto >= 200 and self.y_solto < 300:
-                    if self.rect.y == 330:
+                    self.y_chao = 380
+                    if self.rect.y >= self.y_chao:
                         self.caindo = False
+
                 if self.y_solto >= 100 and self.y_solto < 200:
-                    if self.rect.y == 380:
+                    self.y_chao = 330
+                    if self.rect.y >= self.y_chao:
                         self.caindo = False
                 if self.y_solto >= 0 and self.y_solto < 100:
-                    if self.rect.y == 406:
+                    self.y_chao = 290
+                    if self.rect.y >= self.y_chao:
                         self.caindo = False
 
         if self.solto == False:
