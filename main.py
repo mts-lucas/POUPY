@@ -71,12 +71,14 @@ while True:
                 todas_as_sprites.add(sabao)
 
         if event.type == pygame.USEREVENT + 2:
+                pygame.time.set_timer(maca.sumir, 0)
                 todas_as_sprites.remove(maca)
                 del maca
 
         if event.type == pygame.USEREVENT + 3:
                 todas_as_sprites.remove(sabao)
-                del sobao
+                pygame.time.set_timer(sabao.sumir, 0)
+                del sabao
 
     if bixinho.rect.x > largura_janela - 120:
         bixinho.rect.x = largura_janela - 120
