@@ -214,15 +214,18 @@ class Alimento(pygame.sprite.Sprite):
                 if self.y_solto >= 200 and self.y_solto < 300:
                     self.y_chao = 380
                     if self.rect.y >= self.y_chao:
+                        pygame.time.set_timer(self.sumir, 5000)
                         self.caindo = False
 
                 if self.y_solto >= 100 and self.y_solto < 200:
                     self.y_chao = 330
                     if self.rect.y >= self.y_chao:
+                        pygame.time.set_timer(self.sumir, 5000)
                         self.caindo = False
                 if self.y_solto >= 0 and self.y_solto < 100:
                     self.y_chao = 290
                     if self.rect.y >= self.y_chao:
+                        pygame.time.set_timer(self.sumir, 5000)
                         self.caindo = False
 
         if self.solto == False:
@@ -258,4 +261,45 @@ class Alimento_Button(pygame.sprite.Sprite):
 class Soap_Button(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.img_button = sprite_but_sabao.subsurface((0, 0), (64, 64)) 
+        self.img_button = sprite_but_sabao.subsurface((0, 0), (64, 64))
+        self.botao_clicado = False
+        self.botao_clicado = False
+        self.image = self.img_button
+        self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
+        self.x = 112
+        self.y = 374
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.x, self.y
+
+    def update(self):
+
+        self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
+
+class Soap(pygame.sprite.Sprite):
+    def __init__(self, mouse_pos):
+        pygame.sprite.Sprite.__init__(self)
+        self.sabao_usado = []
+        for i in range(0,5):
+            img = sprite_sabao.subsurface((i * 64 , 0), (64, 64))
+            self.sabao_usado.append(img)
+        self.index_frame_sabao = 0
+        self.image = self.sabao_usado[0]
+        self.image = pygame.transform.scale(self.image, (32 * 2, 32 * 2))
+        self.solto = False
+        self.sumir = pygame.USEREVENT + 3
+        pygame.time.set_timer(self.sumir, 5000)
+        
+        self.x, self.y = mouse_pos
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.x, self.y
+
+    def update(self):
+
+        if self.solto == False:
+            if pygame.mouse.get_pressed()[0] == True:
+                self.rect.x, self.rect.y = pygame.mouse.get_pos()
+
+            else:
+                self.solto = True
+
+        self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))

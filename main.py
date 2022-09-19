@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 from sys import exit
 # import os
-from classes import Poupy, Alimento, Alimento_Button
+from classes import Poupy, Alimento, Alimento_Button, Soap, Soap_Button
 from random import randint
 
 pygame.init()
@@ -37,6 +37,8 @@ relogio_jogo = pygame.time.Clock()
 todas_as_sprites = pygame.sprite.Group()
 bixinho = Poupy()
 botao_comida = Alimento_Button()
+botao_sabao = Soap_Button()
+todas_as_sprites.add(botao_sabao)
 todas_as_sprites.add(bixinho)
 todas_as_sprites.add(botao_comida)
 
@@ -64,9 +66,17 @@ while True:
                 maca = Alimento(mouse_pos)
                 todas_as_sprites.add(maca)
 
+            if event.button == 1 and botao_sabao.rect.collidepoint(mouse_pos):
+                sabao = Soap(mouse_pos)
+                todas_as_sprites.add(sabao)
+
         if event.type == pygame.USEREVENT + 2:
                 todas_as_sprites.remove(maca)
                 del maca
+
+        if event.type == pygame.USEREVENT + 3:
+                todas_as_sprites.remove(sabao)
+                del sobao
 
     if bixinho.rect.x > largura_janela - 120:
         bixinho.rect.x = largura_janela - 120
