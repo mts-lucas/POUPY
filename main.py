@@ -76,8 +76,8 @@ while True:
                 del maca
 
         if event.type == pygame.USEREVENT + 3:
-                todas_as_sprites.remove(sabao)
                 pygame.time.set_timer(sabao.sumir, 0)
+                todas_as_sprites.remove(sabao)
                 del sabao
 
     if bixinho.rect.x > largura_janela - 120:

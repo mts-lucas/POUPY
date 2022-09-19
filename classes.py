@@ -182,7 +182,7 @@ class Alimento(pygame.sprite.Sprite):
         self.y_solto = None
         self.y_chao = None
         self.sumir = pygame.USEREVENT + 2
-        pygame.time.set_timer(self.sumir, 5000)
+        pygame.time.set_timer(self.sumir, 0)
         self.x, self.y = mouse_pos
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
@@ -209,15 +209,18 @@ class Alimento(pygame.sprite.Sprite):
                 if self.y_solto >= 200 and self.y_solto < 300:
                     self.y_chao = 380
                     if self.rect.y >= self.y_chao:
+                        pygame.time.set_timer(self.sumir, 5000)
                         self.caindo = False
 
                 if self.y_solto >= 100 and self.y_solto < 200:
                     self.y_chao = 330
                     if self.rect.y >= self.y_chao:
+                        pygame.time.set_timer(self.sumir, 5000)
                         self.caindo = False
                 if self.y_solto >= 0 and self.y_solto < 100:
                     self.y_chao = 290
                     if self.rect.y >= self.y_chao:
+                        pygame.time.set_timer(self.sumir, 5000)
                         self.caindo = False
 
         if self.solto == False:
@@ -279,7 +282,7 @@ class Soap(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (32 * 2, 32 * 2))
         self.solto = False
         self.sumir = pygame.USEREVENT + 3
-        pygame.time.set_timer(self.sumir, 5)
+        pygame.time.set_timer(self.sumir, 0)
         
         self.x, self.y = mouse_pos
         self.rect = self.image.get_rect()
@@ -292,6 +295,7 @@ class Soap(pygame.sprite.Sprite):
                 self.rect.x, self.rect.y = pygame.mouse.get_pos()
 
             else:
+                pygame.time.set_timer(self.sumir, 100)
                 self.solto = True
 
         self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
