@@ -12,6 +12,8 @@ diretorio_sons = os.path.join(diretorio_principal, 'trilha sonora')
 sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'link_sprites.png'))
 sprite_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple.png'))
 sprite_but_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple_button.png'))
+sprite_but_sabao = pygame.image.load(os.path.join(diretorio_imagens, 'botao_sabao.png'))
+sprite_sabao = pygame.image.load(os.path.join(diretorio_imagens, 'sabao_sprites.png'))
 
 # criando a classe do bichinho virtual
 
@@ -253,6 +255,7 @@ class Alimento_Button(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
 
 
-# usar depois na classe da fruta 
-
-# if botao_comida.rect.collidepoint(mouse_pos) and mouse_button1 == True:
+class Soap_Button(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.img_button = sprite_but_sabao.subsurface((0, 0), (64, 64)) 
