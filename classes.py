@@ -287,6 +287,7 @@ class Soap(pygame.sprite.Sprite):
         pygame.time.set_timer(self.sumir, 0)
         
         self.x, self.y = mouse_pos
+        self.x -= 32
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
 
@@ -295,6 +296,7 @@ class Soap(pygame.sprite.Sprite):
         if self.solto == False:
             if pygame.mouse.get_pressed()[0] == True:
                 self.rect.x, self.rect.y = pygame.mouse.get_pos()
+                self.rect.x -= 32
                 if self.usando == True:
                     self.image = self.sabao_usado[int(self.index_frame_sabao)]
                     self.index_frame_sabao += 0.1
