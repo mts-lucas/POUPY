@@ -104,6 +104,7 @@ while True:
                 sabao.usando = False
 
     if mouse_button1 == True and bixinho.rect.collidepoint(mouse_pos):
+        print("entrou")
         bixinho.update_action(5)
 
     if bixinho.rect.x > largura_janela - 120:

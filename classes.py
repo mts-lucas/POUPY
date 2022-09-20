@@ -128,9 +128,6 @@ class Poupy(pygame.sprite.Sprite):
 
  # ERRO AQUI
 
-        if self.afagado == True:
-            self.update_action(5)
-
         if self.action == 0:
             self.image = self.img_stoped[int(self.index_frame)]
             self.index_frame += 0.05
@@ -181,7 +178,8 @@ class Poupy(pygame.sprite.Sprite):
 # ERRO AQUI
 
         elif self.action == 5:
-            print("entrou")
+            pygame.time.set_timer(self.timer_andar, 0)
+            print("entrou 22")
             self.image = self.img_afago[int(self.index_frame)]
             self.index_frame += 0.05
             if self.index_frame >= len(self.img_afago):
@@ -191,6 +189,7 @@ class Poupy(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (120, 130))
 
     def update_action(self, new_action):
+        print(new_action, self.action)
         if new_action != self.action:
             self.action = new_action
             self.index_frame = 0
