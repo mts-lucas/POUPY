@@ -77,6 +77,10 @@ while True:
                 todas_as_sprites.add(sabao)
                 sabao_existe = True
 
+            if event.button == 1 and bixinho.rect.collidepoint(mouse_pos):
+                bixinho.update_action(0)
+                pygame.time.set_timer(bixinho.timer_andar, 0)
+
         if event.type == pygame.USEREVENT + 2:
             pygame.time.set_timer(maca.sumir, 0)
             todas_as_sprites.remove(maca)

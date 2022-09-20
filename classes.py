@@ -1,3 +1,4 @@
+from pickletools import pyfloat
 import pygame
 from pygame.locals import *
 import os
@@ -15,6 +16,7 @@ sprite_but_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple_but
 sprite_but_sabao = pygame.image.load(os.path.join(diretorio_imagens, 'botao_sabao.png'))
 sprite_sabao = pygame.image.load(os.path.join(diretorio_imagens, 'sabao_sprites.png'))
 sprite_mouse = pygame.image.load(os.path.join(diretorio_imagens, 'mouse_sprites.png'))
+sprite_afagado = pygame.image.load(os.path.join(diretorio_imagens, 'link_sprites_afago.png'))
 
 # criando a classe do bichinho virtual
 
@@ -49,7 +51,13 @@ class Poupy(pygame.sprite.Sprite):
             img = sprite_sheet.subsurface((m * 120, 0), (120, 130))
             self.img_right.append(img)
 
-        self.action = 0  # 0: stoped 1:down 2:left 3:up 4:right
+        self.img_afago = []
+        for n in range (3):
+            img = sprite_afagado.subsurface((n * 120, 0), (120, 130))
+            self.img_afago.append(img)
+
+
+        self.action = 0  # 0: stoped 1:down 2:left 3:up 4:right 5:afago
         self.index_frame = 0
         self.image = self.img_stoped[self.index_frame]
         self.image = pygame.transform.scale(self.image, (120, 130))
@@ -65,6 +73,7 @@ class Poupy(pygame.sprite.Sprite):
         self.y = 300
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
+        self.afagado = False
 
 
     def update(self):
@@ -113,6 +122,9 @@ class Poupy(pygame.sprite.Sprite):
         if self.newx == self.rect.x and self.newy == self.rect.y:
             self.update_action(0)
 
+ #ERRO AQUI
+
+
         if self.action == 0:
             self.image = self.img_stoped[int(self.index_frame)]
             self.index_frame += 0.05
@@ -158,6 +170,15 @@ class Poupy(pygame.sprite.Sprite):
             if self.index_frame >= len(self.img_right):
                 self.index_frame = 0
                 self.update_action(0)
+
+
+#ERRO AQUI
+
+        elif self.action == 5:
+            self.image = self.img_afago[int(self.index_frame)]
+            self.index_frame += 0.05
+            if self.index_frame >= len(self.img_afago):
+                self.index_frame = 0
 
         self.image = pygame.transform.scale(self.image, (120, 130))
 
@@ -311,7 +332,6 @@ class Soap(pygame.sprite.Sprite):
                 self.solto = True
 
         self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
-
 
 class Hand(pygame.sprite.Sprite):
     def __init__(self, mouse_pos):
