@@ -10,13 +10,19 @@ pygame.init()
 diretorio_principal = os.path.dirname(__file__)
 diretorio_imagens = os.path.join(diretorio_principal, 'sprites')
 diretorio_sons = os.path.join(diretorio_principal, 'trilha sonora')
-sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'link_sprites.png'))
+sprite_sheet = pygame.image.load(
+    os.path.join(diretorio_imagens, 'link_sprites.png'))
 sprite_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple.png'))
-sprite_but_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple_button.png'))
-sprite_but_sabao = pygame.image.load(os.path.join(diretorio_imagens, 'botao_sabao.png'))
-sprite_sabao = pygame.image.load(os.path.join(diretorio_imagens, 'sabao_sprites.png'))
-sprite_mouse = pygame.image.load(os.path.join(diretorio_imagens, 'mouse_sprites.png'))
-sprite_afagado = pygame.image.load(os.path.join(diretorio_imagens, 'link_sprites_afago.png'))
+sprite_but_comida = pygame.image.load(
+    os.path.join(diretorio_imagens, 'apple_button.png'))
+sprite_but_sabao = pygame.image.load(
+    os.path.join(diretorio_imagens, 'botao_sabao.png'))
+sprite_sabao = pygame.image.load(os.path.join(
+    diretorio_imagens, 'sabao_sprites.png'))
+sprite_mouse = pygame.image.load(os.path.join(
+    diretorio_imagens, 'mouse_sprites.png'))
+sprite_afagado = pygame.image.load(os.path.join(
+    diretorio_imagens, 'link_sprites_afago.png'))
 
 # criando a classe do bichinho virtual
 
@@ -52,10 +58,9 @@ class Poupy(pygame.sprite.Sprite):
             self.img_right.append(img)
 
         self.img_afago = []
-        for n in range (3):
+        for n in range(3):
             img = sprite_afagado.subsurface((n * 120, 0), (120, 130))
             self.img_afago.append(img)
-
 
         self.action = 0  # 0: stoped 1:down 2:left 3:up 4:right 5:afago
         self.index_frame = 0
@@ -75,14 +80,13 @@ class Poupy(pygame.sprite.Sprite):
         self.rect.topleft = self.x, self.y
         self.afagado = False
 
-
     def update(self):
 
         if self.newx != self.rect.x:
             if self.newx > self.rect.x:
                 self.update_action(4)
                 if (self.rect.x + 2) > self.newx:
-                    self.newx = self.rect.x 
+                    self.newx = self.rect.x
                 if self.newx == self.rect.x and self.newy != self.rect.y:
                     if self.newy > self.rect.y:
                         self.update_action(1)
@@ -92,17 +96,17 @@ class Poupy(pygame.sprite.Sprite):
             if self.newx < self.rect.x:
                 self.update_action(2)
                 if (self.rect.x - 2) < self.newx:
-                    self.newx = self.rect.x 
+                    self.newx = self.rect.x
                 if self.newx == self.rect.x and self.newy != self.rect.y:
                     if self.newy > self.rect.y:
                         self.update_action(1)
                     elif self.newy < self.rect.y:
                         self.update_action(3)
 
-            if self.newy < self.rect.y and self.newx < self.rect.x + 240 and self.newx > self.rect.x - 120 :
+            if self.newy < self.rect.y and self.newx < self.rect.x + 240 and self.newx > self.rect.x - 120:
                 self.update_action(3)
                 if (self.rect.y - 2) < self.newy:
-                    self.newy = self.rect.y 
+                    self.newy = self.rect.y
                 if self.newy == self.rect.y and self.newx != self.rect.x:
                     if self.newx > self.rect.x:
                         self.update_action(4)
@@ -112,7 +116,7 @@ class Poupy(pygame.sprite.Sprite):
             if self.newy > self.rect.y and self.newx < self.rect.x + 240 and self.newx > self.rect.x - 120:
                 self.update_action(1)
                 if (self.rect.y + 2) < self.newy:
-                    self.newy = self.rect.y 
+                    self.newy = self.rect.y
                 if self.newy == self.rect.y and self.newx != self.rect.x:
                     if self.newx > self.rect.x:
                         self.update_action(4)
@@ -122,8 +126,10 @@ class Poupy(pygame.sprite.Sprite):
         if self.newx == self.rect.x and self.newy == self.rect.y:
             self.update_action(0)
 
- #ERRO AQUI
+ # ERRO AQUI
 
+        if self.afagado == True:
+            self.update_action(5)
 
         if self.action == 0:
             self.image = self.img_stoped[int(self.index_frame)]
@@ -172,13 +178,15 @@ class Poupy(pygame.sprite.Sprite):
                 self.update_action(0)
 
 
-#ERRO AQUI
+# ERRO AQUI
 
         elif self.action == 5:
+            print("entrou")
             self.image = self.img_afago[int(self.index_frame)]
             self.index_frame += 0.05
             if self.index_frame >= len(self.img_afago):
                 self.index_frame = 0
+                self.update_action(0)
 
         self.image = pygame.transform.scale(self.image, (120, 130))
 
@@ -187,14 +195,15 @@ class Poupy(pygame.sprite.Sprite):
             self.action = new_action
             self.index_frame = 0
 
+
 class Alimento(pygame.sprite.Sprite):
 
     def __init__(self, mouse_pos):
         pygame.sprite.Sprite.__init__(self)
         self.comida_parada = sprite_comida.subsurface((0, 0), (32, 32))
         self.sendo_comida = []
-        for i in range(0,5):
-            img = sprite_comida.subsurface((i * 32 , 0), (32, 32))
+        for i in range(0, 5):
+            img = sprite_comida.subsurface((i * 32, 0), (32, 32))
             self.sendo_comida.append(img)
         self.index_frame_maca = 0
         self.image = self.comida_parada
@@ -215,7 +224,7 @@ class Alimento(pygame.sprite.Sprite):
 
     def cair(self):
         self.caindo = True
-        
+
     def update(self):
         if self.start_comer == True:
             self.image = self.sendo_comida[int(self.index_frame_maca)]
@@ -228,7 +237,7 @@ class Alimento(pygame.sprite.Sprite):
                 self.caindo = False
             else:
                 self.rect.y += 5
-                
+
                 if self.y_solto >= 200 and self.y_solto < 300:
                     self.y_chao = 380
                     if self.rect.y >= self.y_chao:
@@ -254,10 +263,9 @@ class Alimento(pygame.sprite.Sprite):
                 self.y_solto = self.rect.y
                 self.cair()
                 self.solto = True
- 
 
-                
         self.image = pygame.transform.scale(self.image, (32 * 2, 32 * 2))
+
 
 class Alimento_Button(pygame.sprite.Sprite):
     def __init__(self):
@@ -270,10 +278,11 @@ class Alimento_Button(pygame.sprite.Sprite):
         self.y = 374
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
-    
+
     def update(self):
 
         self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
+
 
 class Soap_Button(pygame.sprite.Sprite):
     def __init__(self):
@@ -292,12 +301,13 @@ class Soap_Button(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
 
+
 class Soap(pygame.sprite.Sprite):
     def __init__(self, mouse_pos):
         pygame.sprite.Sprite.__init__(self)
         self.sabao_usado = []
-        for i in range(0,5):
-            img = sprite_sabao.subsurface((i * 64 , 0), (64, 64))
+        for i in range(0, 5):
+            img = sprite_sabao.subsurface((i * 64, 0), (64, 64))
             self.sabao_usado.append(img)
         self.index_frame_sabao = 0
         self.image = self.sabao_usado[self.index_frame_sabao]
@@ -306,7 +316,7 @@ class Soap(pygame.sprite.Sprite):
         self.usando = False
         self.sumir = pygame.USEREVENT + 3
         pygame.time.set_timer(self.sumir, 0)
-        
+
         self.x, self.y = mouse_pos
         self.x -= 32
         self.rect = self.image.get_rect()
@@ -333,20 +343,20 @@ class Soap(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
 
+
 class Hand(pygame.sprite.Sprite):
     def __init__(self, mouse_pos):
         pygame.sprite.Sprite.__init__(self)
         self.clicar = False
         self.x, self.y = mouse_pos
         self.x -= 32
-        self.normal =  sprite_mouse.subsurface((128 , 0), (64, 80))
-        self.clicado = sprite_mouse.subsurface((64 , 0), (64, 80)) 
+        self.normal = sprite_mouse.subsurface((128, 0), (64, 80))
+        self.clicado = sprite_mouse.subsurface((64, 0), (64, 80))
         self.image = self.normal
-        self.image = pygame.transform.scale(self.image, (32 , 40))
+        self.image = pygame.transform.scale(self.image, (32, 40))
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
-
 
     def update(self):
         if self.clicar == False:
@@ -358,6 +368,5 @@ class Hand(pygame.sprite.Sprite):
                 self.image = self.normal
                 self.rect.x, self.rect.y = pygame.mouse.get_pos()
                 self.rect.x -= 32
-
 
         self.image = pygame.transform.scale(self.image, (33 * 2, 40 * 2))
