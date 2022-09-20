@@ -53,6 +53,7 @@ class Poupy(pygame.sprite.Sprite):
         self.index_frame = 0
         self.image = self.img_stoped[self.index_frame]
         self.image = pygame.transform.scale(self.image, (120, 130))
+        self.mask = pygame.mask.from_surface(self.image)
 
         self.rect = self.image.get_rect()
 
@@ -253,7 +254,6 @@ class Alimento_Button(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
 
-
 class Soap_Button(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -279,9 +279,10 @@ class Soap(pygame.sprite.Sprite):
             img = sprite_sabao.subsurface((i * 64 , 0), (64, 64))
             self.sabao_usado.append(img)
         self.index_frame_sabao = 0
-        self.image = self.sabao_usado[0]
+        self.image = self.sabao_usado[self.index_frame_sabao]
         self.image = pygame.transform.scale(self.image, (32 * 2, 32 * 2))
         self.solto = False
+        self.usando = False
         self.sumir = pygame.USEREVENT + 3
         pygame.time.set_timer(self.sumir, 0)
         
@@ -294,6 +295,14 @@ class Soap(pygame.sprite.Sprite):
         if self.solto == False:
             if pygame.mouse.get_pressed()[0] == True:
                 self.rect.x, self.rect.y = pygame.mouse.get_pos()
+                if self.usando == True:
+                    self.image = self.sabao_usado[int(self.index_frame_sabao)]
+                    self.index_frame_sabao += 0.1
+                    if self.index_frame_sabao >= len(self.sabao_usado):
+                        self.index_frame_sabao = 0
+
+                else:
+                    self.index_frame_sabao = 0
 
             else:
                 pygame.time.set_timer(self.sumir, 100)
@@ -312,6 +321,7 @@ class Hand(pygame.sprite.Sprite):
         self.clicado = sprite_mouse.subsurface((64 , 0), (64, 80)) 
         self.image = self.normal
         self.image = pygame.transform.scale(self.image, (32 , 40))
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
 

@@ -44,6 +44,8 @@ todas_as_sprites.add(botao_comida)
 travar_comida = False
 mouse = Hand(pygame.mouse.get_pos())
 todas_as_sprites.add(mouse)
+sabao_existe = False
+grupo_sabao = pygame.sprite.Group()
 
 while True:
 
@@ -69,23 +71,33 @@ while True:
                 maca = Alimento(mouse_pos)
                 todas_as_sprites.add(maca)
                 travar_comida = True
-                    
-                
 
             if event.button == 1 and botao_sabao.rect.collidepoint(mouse_pos):
                 sabao = Soap(mouse_pos)
                 todas_as_sprites.add(sabao)
+                sabao_existe = True
 
         if event.type == pygame.USEREVENT + 2:
-                pygame.time.set_timer(maca.sumir, 0)
-                todas_as_sprites.remove(maca)
-                del maca
-                travar_comida = False 
+            pygame.time.set_timer(maca.sumir, 0)
+            todas_as_sprites.remove(maca)
+            del maca
+            travar_comida = False
 
         if event.type == pygame.USEREVENT + 3:
-                pygame.time.set_timer(sabao.sumir, 0)
-                todas_as_sprites.remove(sabao)
-                del sabao
+            pygame.time.set_timer(sabao.sumir, 0)
+            todas_as_sprites.remove(sabao)
+            del sabao
+            sabao_existe = False
+
+        if sabao_existe == True:
+            grupo_sabao.add(sabao)
+            colisoes = pygame.sprite.spritecollide(
+            bixinho, grupo_sabao, False, pygame.sprite.collide_mask)
+
+            if colisoes:
+                sabao.usando = True
+            else:
+                sabao.usando = False
 
     if bixinho.rect.x > largura_janela - 120:
         bixinho.rect.x = largura_janela - 120
