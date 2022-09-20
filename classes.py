@@ -14,6 +14,7 @@ sprite_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple.png'))
 sprite_but_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple_button.png'))
 sprite_but_sabao = pygame.image.load(os.path.join(diretorio_imagens, 'botao_sabao.png'))
 sprite_sabao = pygame.image.load(os.path.join(diretorio_imagens, 'sabao_sprites.png'))
+sprite_mouse = pygame.image.load(os.path.join(diretorio_imagens, 'mouse_sprites.png'))
 
 # criando a classe do bichinho virtual
 
@@ -139,7 +140,7 @@ class Poupy(pygame.sprite.Sprite):
 
         elif self.action == 3:
             self.image = self.img_up[int(self.index_frame)]
-            self.index_frame += 0.2
+            self.index_frame += 0.5
             self.rect.y -= 2
             if self.index_frame >= len(self.img_up):
                 self.index_frame = 0
@@ -243,7 +244,7 @@ class Alimento_Button(pygame.sprite.Sprite):
         self.botao_clicado = False
         self.image = self.img_button
         self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
-        self.x = 272
+        self.x = 112
         self.y = 374
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
@@ -261,7 +262,7 @@ class Soap_Button(pygame.sprite.Sprite):
         self.botao_clicado = False
         self.image = self.img_button
         self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
-        self.x = 112
+        self.x = 432
         self.y = 374
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
@@ -304,3 +305,27 @@ class Soap(pygame.sprite.Sprite):
 class Hand(pygame.sprite.Sprite):
     def __init__(self, mouse_pos):
         pygame.sprite.Sprite.__init__(self)
+        self.clicar = False
+        self.x, self.y = mouse_pos
+        self.x -= 32
+        self.normal =  sprite_mouse.subsurface((128 , 0), (64, 80))
+        self.clicado = sprite_mouse.subsurface((64 , 0), (64, 80)) 
+        self.image = self.normal
+        self.image = pygame.transform.scale(self.image, (32 , 40))
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.x, self.y
+
+
+    def update(self):
+        if self.clicar == False:
+            if pygame.mouse.get_pressed()[0] == True:
+                self.image = self.clicado
+                self.rect.x, self.rect.y = pygame.mouse.get_pos()
+                self.rect.x -= 32
+            else:
+                self.image = self.normal
+                self.rect.x, self.rect.y = pygame.mouse.get_pos()
+                self.rect.x -= 32
+
+
+        self.image = pygame.transform.scale(self.image, (33 * 2, 40 * 2))

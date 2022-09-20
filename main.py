@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 from sys import exit
 # import os
-from classes import Poupy, Alimento, Alimento_Button, Soap, Soap_Button
+from classes import Hand, Poupy, Alimento, Alimento_Button, Soap, Soap_Button
 from random import randint
 
 pygame.init()
@@ -42,6 +42,8 @@ todas_as_sprites.add(botao_sabao)
 todas_as_sprites.add(bixinho)
 todas_as_sprites.add(botao_comida)
 travar_comida = False
+mouse = Hand(pygame.mouse.get_pos())
+todas_as_sprites.add(mouse)
 
 while True:
 
@@ -50,6 +52,7 @@ while True:
 
     relogio_jogo.tick(60)  # 30 fps
     tela_jogo.fill((0, 0, 0))  # cor da tela preta
+    pygame.mouse.set_visible(False)
 
     for event in pygame.event.get():
 
