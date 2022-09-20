@@ -41,7 +41,7 @@ botao_sabao = Soap_Button()
 todas_as_sprites.add(botao_sabao)
 todas_as_sprites.add(bixinho)
 todas_as_sprites.add(botao_comida)
-
+travar_comida = False
 
 while True:
 
@@ -62,9 +62,12 @@ while True:
             bixinho.newy = randint(200, 350)
 
         if event.type == MOUSEBUTTONDOWN:
-            if event.button == 1 and botao_comida.rect.collidepoint(mouse_pos):
+            if event.button == 1 and botao_comida.rect.collidepoint(mouse_pos) and travar_comida == False:
                 maca = Alimento(mouse_pos)
                 todas_as_sprites.add(maca)
+                travar_comida = True
+                    
+                
 
             if event.button == 1 and botao_sabao.rect.collidepoint(mouse_pos):
                 sabao = Soap(mouse_pos)
@@ -74,6 +77,7 @@ while True:
                 pygame.time.set_timer(maca.sumir, 0)
                 todas_as_sprites.remove(maca)
                 del maca
+                travar_comida = False 
 
         if event.type == pygame.USEREVENT + 3:
                 pygame.time.set_timer(sabao.sumir, 0)

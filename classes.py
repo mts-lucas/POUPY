@@ -299,3 +299,8 @@ class Soap(pygame.sprite.Sprite):
                 self.solto = True
 
         self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
+
+
+class Hand(pygame.sprite.Sprite):
+    def __init__(self, mouse_pos):
+        pygame.sprite.Sprite.__init__(self)
