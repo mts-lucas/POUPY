@@ -46,6 +46,7 @@ mouse = Hand(pygame.mouse.get_pos())
 todas_as_sprites.add(mouse)
 sabao_existe = False
 grupo_sabao = pygame.sprite.Group()
+# continua_andando = True
 
 while True:
 
@@ -62,6 +63,7 @@ while True:
             pygame.quit()
             exit()
 
+        # if continua_andando == True:
         if event.type == bixinho.timer_andar:
             bixinho.newx = randint(0, 520)
             bixinho.newy = randint(200, 350)
@@ -76,10 +78,7 @@ while True:
                 sabao = Soap(mouse_pos)
                 todas_as_sprites.add(sabao)
                 sabao_existe = True
-
-            # if event.button == 1 and bixinho.rect.collidepoint(mouse_pos):
-            #     bixinho.update_action(5)
-                
+                                   
 
         if event.type == pygame.USEREVENT + 2:
             pygame.time.set_timer(maca.sumir, 0)
@@ -103,8 +102,10 @@ while True:
             else:
                 sabao.usando = False
 
+
     if mouse_button1 == True and bixinho.rect.collidepoint(mouse_pos):
         print("entrou")
+        # continua_andando = False
         bixinho.update_action(5)
 
     if bixinho.rect.x > largura_janela - 120:

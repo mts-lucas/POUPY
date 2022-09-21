@@ -123,10 +123,10 @@ class Poupy(pygame.sprite.Sprite):
                     elif self.newx < self.rect.x:
                         self.update_action(2)
 
-        if self.newx == self.rect.x and self.newy == self.rect.y:
-            self.update_action(0)
+#erro na linha 128
 
- # ERRO AQUI
+        if self.newx == self.rect.x and self.newy == self.rect.y and self.mouse_colidindo() == False:
+            self.update_action(0)
 
         if self.action == 0:
             self.image = self.img_stoped[int(self.index_frame)]
@@ -173,12 +173,10 @@ class Poupy(pygame.sprite.Sprite):
             if self.index_frame >= len(self.img_right):
                 self.index_frame = 0
                 self.update_action(0)
-
-
 # ERRO AQUI
 
         elif self.action == 5:
-            pygame.time.set_timer(self.timer_andar, 0)
+            # pygame.time.set_timer(self.timer_andar, 0)
             print("entrou 22")
             self.image = self.img_afago[int(self.index_frame)]
             self.index_frame += 0.05
@@ -194,6 +192,11 @@ class Poupy(pygame.sprite.Sprite):
             self.action = new_action
             self.index_frame = 0
 
+    def mouse_colidindo(self):
+        if self.rect.collidepoint(pygame.mouse.get_pos()) == True and pygame.mouse.get_pressed()[0] == True:
+            return True
+        else:
+            return False
 
 class Alimento(pygame.sprite.Sprite):
 
