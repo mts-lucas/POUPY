@@ -107,18 +107,12 @@ while True:
         print("entrou")
         continua_andando = False
         bixinho.update_action(5)
+        bixinho.newx = bixinho.rect.x
+        bixinho.newy = bixinho.rect.y
 
     if bixinho.action == 0:
         continua_andando = True
 
-    if bixinho.rect.x > largura_janela - 120:
-        bixinho.rect.x = largura_janela - 120
-    if bixinho.rect.x < 0:
-        bixinho.rect.x = 0
-    if bixinho.rect.y < 200:
-        bixinho.rect.y = 200
-    if bixinho.rect.y > altura_janela - 130:
-        bixinho.rect.y = altura_janela - 130
 
     tela_jogo.blit(tela_fundo, (0, 0))
     todas_as_sprites.draw(tela_jogo)
