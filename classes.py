@@ -1,4 +1,3 @@
-from pickletools import pyfloat
 import pygame
 from pygame.locals import *
 import os
@@ -197,6 +196,14 @@ class Poupy(pygame.sprite.Sprite):
             return True
         else:
             return False
+
+    def ler_imagens(self, primeiro_numero, segundo_numero, sprite ):
+        lista_imagens = []
+        for i in range(primeiro_numero, segundo_numero):
+            img = sprite.subsurface((i * 120, 0), (120, 130))
+            lista_imagens.append(img)
+
+        return lista_imagens
 
 class Alimento(pygame.sprite.Sprite):
 
