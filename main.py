@@ -2,6 +2,10 @@ import pygame
 from pygame.locals import *
 from sys import exit
 from classe_poupy import Poupy
+from classe_mouse import Hand
+from classe_comida import Alimento
+from classe_botao_comida import Alimento_Button
+
 from random import randint
 
 pygame.init()
