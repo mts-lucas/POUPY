@@ -5,8 +5,6 @@ from constantes import ler_imagens, SPRITE_SHEET, SPRITE_AFAGADO
 
 pygame.init()
 
-# criando a classe do bichinho virtual
-
 
 class Poupy(pygame.sprite.Sprite):
 
@@ -154,80 +152,3 @@ class Poupy(pygame.sprite.Sprite):
             return True
         else:
             return False
-
-
-class Alimento_Button(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.img_button = sprite_but_comida.subsurface((0, 0), (64, 64))
-        self.botao_clicado = False
-        self.image = self.img_button
-        self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
-        self.x = 112
-        self.y = 374
-        self.rect = self.image.get_rect()
-        self.rect.topleft = self.x, self.y
-
-    def update(self):
-
-        self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
-
-
-class Soap_Button(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.img_button = sprite_but_sabao.subsurface((0, 0), (64, 64))
-        self.botao_clicado = False
-        self.botao_clicado = False
-        self.image = self.img_button
-        self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
-        self.x = 432
-        self.y = 374
-        self.rect = self.image.get_rect()
-        self.rect.topleft = self.x, self.y
-
-    def update(self):
-
-        self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
-
-
-class Soap(pygame.sprite.Sprite):
-    def __init__(self, mouse_pos):
-        pygame.sprite.Sprite.__init__(self)
-        self.sabao_usado = []
-        for i in range(0, 5):
-            img = sprite_sabao.subsurface((i * 64, 0), (64, 64))
-            self.sabao_usado.append(img)
-        self.index_frame_sabao = 0
-        self.image = self.sabao_usado[self.index_frame_sabao]
-        self.image = pygame.transform.scale(self.image, (32 * 2, 32 * 2))
-        self.solto = False
-        self.usando = False
-        self.sumir = pygame.USEREVENT + 3
-        pygame.time.set_timer(self.sumir, 0)
-
-        self.x, self.y = mouse_pos
-        self.x -= 32
-        self.rect = self.image.get_rect()
-        self.rect.topleft = self.x, self.y
-
-    def update(self):
-
-        if self.solto == False:
-            if pygame.mouse.get_pressed()[0] == True:
-                self.rect.x, self.rect.y = pygame.mouse.get_pos()
-                self.rect.x -= 32
-                if self.usando == True:
-                    self.image = self.sabao_usado[int(self.index_frame_sabao)]
-                    self.index_frame_sabao += 0.1
-                    if self.index_frame_sabao >= len(self.sabao_usado):
-                        self.index_frame_sabao = 0
-
-                else:
-                    self.index_frame_sabao = 0
-
-            else:
-                pygame.time.set_timer(self.sumir, 100)
-                self.solto = True
-
-        self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
