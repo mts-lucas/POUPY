@@ -24,3 +24,7 @@ SPRITE_BUT_SABAO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'botao_saba
 SPRITE_SABAO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'sabao_sprites.png'))
 SPRITE_MOUSE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'mouse_sprites.png'))
 SPRITE_AFAGADO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'link_sprites_afago.png'))
+
+
+LARGURA_JANELA = 640
+ALTURA_JANELA = 480

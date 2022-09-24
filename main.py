@@ -8,6 +8,7 @@ from classe_botao_comida import Alimento_Button
 from classe_botao_sabao import Soap_Button
 from classe_sabao import Soap
 from random import randint
+from constantes import ALTURA_JANELA, LARGURA_JANELA
 
 pygame.init()
 
@@ -17,17 +18,11 @@ pygame.mixer.music.set_volume(0.50)
 pygame.mixer.music.load("trilha sonora/BoxCat Games - Young Love.mp3")
 pygame.mixer.music.play(-1)
 
-# trecho dedicado a janela do jogo
-
-largura_janela = 640
-altura_janela = 480
-
-
 tela_fundo = pygame.image.load('sprites/telafundo.png')
 tela_fundo = pygame.transform.scale(
-    tela_fundo, (largura_janela, altura_janela))
+    tela_fundo, (LARGURA_JANELA, ALTURA_JANELA))
 
-tela_jogo = pygame.display.set_mode((largura_janela, altura_janela))
+tela_jogo = pygame.display.set_mode((LARGURA_JANELA, ALTURA_JANELA))
 pygame.display.set_caption("Poupy")
 relogio_jogo = pygame.time.Clock()
 
