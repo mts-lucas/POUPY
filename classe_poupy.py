@@ -1,27 +1,26 @@
 import pygame
 from pygame.locals import *
-import os
-# from random import randint
+from constantes import ler_imagens
 
 
 pygame.init()
 
-diretorio_principal = os.path.dirname(__file__)
-diretorio_imagens = os.path.join(diretorio_principal, 'sprites')
-diretorio_sons = os.path.join(diretorio_principal, 'trilha sonora')
-sprite_sheet = pygame.image.load(
-    os.path.join(diretorio_imagens, 'link_sprites.png'))
-sprite_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple.png'))
-sprite_but_comida = pygame.image.load(
-    os.path.join(diretorio_imagens, 'apple_button.png'))
-sprite_but_sabao = pygame.image.load(
-    os.path.join(diretorio_imagens, 'botao_sabao.png'))
-sprite_sabao = pygame.image.load(os.path.join(
-    diretorio_imagens, 'sabao_sprites.png'))
-sprite_mouse = pygame.image.load(os.path.join(
-    diretorio_imagens, 'mouse_sprites.png'))
-sprite_afagado = pygame.image.load(os.path.join(
-    diretorio_imagens, 'link_sprites_afago.png'))
+# diretorio_principal = os.path.dirname(__file__)
+# diretorio_imagens = os.path.join(diretorio_principal, 'sprites')
+# diretorio_sons = os.path.join(diretorio_principal, 'trilha sonora')
+# sprite_sheet = pygame.image.load(
+#     os.path.join(diretorio_imagens, 'link_sprites.png'))
+# sprite_comida = pygame.image.load(os.path.join(diretorio_imagens, 'apple.png'))
+# sprite_but_comida = pygame.image.load(
+#     os.path.join(diretorio_imagens, 'apple_button.png'))
+# sprite_but_sabao = pygame.image.load(
+#     os.path.join(diretorio_imagens, 'botao_sabao.png'))
+# sprite_sabao = pygame.image.load(os.path.join(
+#     diretorio_imagens, 'sabao_sprites.png'))
+# sprite_mouse = pygame.image.load(os.path.join(
+#     diretorio_imagens, 'mouse_sprites.png'))
+# sprite_afagado = pygame.image.load(os.path.join(
+#     diretorio_imagens, 'link_sprites_afago.png'))
 
 # criando a classe do bichinho virtual
 
@@ -31,36 +30,12 @@ class Poupy(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         # setando os sprites de cada direção
-        self.img_stoped = []
-        for i in range(3):
-            img = sprite_sheet.subsurface((i * 120, 0), (120, 130))
-            self.img_stoped.append(img)
-
-        self.img_down = []
-        for j in range(3, 13):
-            img = sprite_sheet.subsurface((j * 120, 0), (120, 130))
-            self.img_down.append(img)
-
-        self.img_left = []
-        for k in range(13, 23):
-            img = sprite_sheet.subsurface((k * 120, 0), (120, 130))
-            self.img_left.append(img)
-
-        self.img_up = []
-        for l in range(23, 33):
-            img = sprite_sheet.subsurface((l * 120, 0), (120, 130))
-            self.img_up.append(img)
-
-        self.img_right = []
-        for m in range(33, 43):
-            img = sprite_sheet.subsurface((m * 120, 0), (120, 130))
-            self.img_right.append(img)
-
-        self.img_afago = []
-        for n in range(3):
-            img = sprite_afagado.subsurface((n * 120, 0), (120, 130))
-            self.img_afago.append(img)
-
+        self.img_stoped = ler_imagens(0, 3, sprite_sheet, 120, 130)
+        self.img_down = ler_imagens(3, 13, sprite_sheet, 120, 130)
+        self.img_left = ler_imagens(13, 23, sprite_sheet, 120, 130)
+        self.img_up = ler_imagens(23, 33, sprite_sheet, 120, 130)
+        self.img_right = ler_imagens(33, 43, sprite_sheet, 120, 130)
+        self.img_afago = ler_imagens(0, 3, sprite_afagado, 120, 130)
         self.action = 0  # 0: stoped 1:down 2:left 3:up 4:right 5:afago
         self.index_frame = 0
         self.image = self.img_stoped[self.index_frame]

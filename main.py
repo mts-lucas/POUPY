@@ -1,8 +1,7 @@
 import pygame
 from pygame.locals import *
 from sys import exit
-# import os
-from classes import Hand, Poupy, Alimento, Alimento_Button, Soap, Soap_Button
+from classe_poupy import Poupy
 from random import randint
 
 pygame.init()
@@ -12,13 +11,6 @@ pygame.init()
 pygame.mixer.music.set_volume(0.50)
 pygame.mixer.music.load("trilha sonora/BoxCat Games - Young Love.mp3")
 pygame.mixer.music.play(-1)
-
-# adcionando diretorios
-
-# diretorio_principal = os.path.dirname(__file__)
-# diretorio_imagens = os.path.join(diretorio_principal, 'sprites')
-# diretorio_sons = os.path.join(diretorio_principal, 'trilha sonora')
-# sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens, 'link_sprites.png'))
 
 # trecho dedicado a janela do jogo
 
