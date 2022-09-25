@@ -35,7 +35,9 @@ travar_comida = False
 mouse = Hand(pygame.mouse.get_pos())
 todas_as_sprites.add(mouse)
 sabao_existe = False
+comida_existe = False
 grupo_sabao = pygame.sprite.Group()
+grupo_comida = pygame.sprite.Group()
 continua_andando = True
 
 while True:
@@ -63,6 +65,7 @@ while True:
                 maca = Alimento(mouse_pos)
                 todas_as_sprites.add(maca)
                 travar_comida = True
+                comida_existe = True
 
             if event.button == 1 and botao_sabao.rect.collidepoint(mouse_pos):
                 sabao = Soap(mouse_pos)
@@ -73,6 +76,7 @@ while True:
         if event.type == pygame.USEREVENT + 2:
             pygame.time.set_timer(maca.sumir, 0)
             todas_as_sprites.remove(maca)
+            comida_existe = False
             del maca
             travar_comida = False
 
@@ -92,9 +96,29 @@ while True:
             else:
                 sabao.usando = False
 
+        if comida_existe == True:
+            if maca.comida_no_chao == True:
+                continua_andando = False
+                bixinho.newx = maca.rect.x - 64
+                bixinho.newy = maca.rect.y - 66
+
+            grupo_comida.add(maca)
+            colisoes2 = pygame.sprite.spritecollide(bixinho, grupo_comida, False, pygame.sprite.collide_mask)
+
+            if colisoes2:
+                bixinho.newx = bixinho.rect.x
+                bixinho.newy = bixinho.rect.y
+                bixinho.comendo = True
+                maca.sendo_comido()
+                if maca.foi_comida == True:
+                    pygame.time.set_timer(maca.sumir, 8000)
+                    bixinho.comendo = False
+                    continua_andando = True
+                    comida_existe = False
+                
+
 
     if mouse_button1 == True and bixinho.rect.collidepoint(mouse_pos):
-        print("entrou")
         continua_andando = False
         bixinho.update_action(5)
         bixinho.newx = bixinho.rect.x

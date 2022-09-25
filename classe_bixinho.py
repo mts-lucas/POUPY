@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from constantes import ler_imagens, SPRITE_SHEET, SPRITE_AFAGADO
+from constantes import ler_imagens, SPRITE_SHEET, SPRITE_AFAGADO, SPRITE_COMENDO
 
 
 pygame.init()
@@ -17,7 +17,8 @@ class Poupy(pygame.sprite.Sprite):
         self.img_up = ler_imagens(23, 33, SPRITE_SHEET, 120, 130)
         self.img_right = ler_imagens(33, 43, SPRITE_SHEET, 120, 130)
         self.img_afago = ler_imagens(0, 3, SPRITE_AFAGADO, 120, 130)
-        self.action = 0  # 0: stoped 1:down 2:left 3:up 4:right 5:afago
+        self.img_comer = ler_imagens(0, 3, SPRITE_COMENDO, 120, 130)
+        self.action = 0  # 0: stoped 1:down 2:left 3:up 4:right 5:afago, 6:comer
         self.index_frame = 0
         self.image = self.img_stoped[self.index_frame]
         self.image = pygame.transform.scale(self.image, (120, 130))
@@ -34,6 +35,7 @@ class Poupy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
         self.afagado = False
+        self.comendo = False
 
     def update(self):
 
@@ -78,10 +80,13 @@ class Poupy(pygame.sprite.Sprite):
                     elif self.newx < self.rect.x:
                         self.update_action(2)
 
-#erro na linha 128
 
         if self.newx == self.rect.x and self.newy == self.rect.y and self.mouse_colidindo() == False:
-            self.update_action(0)
+            if self.comendo == True:
+                self.update_action(6)
+
+            else:
+                self.update_action(0)
 
         if self.action == 0:
             self.image = self.img_stoped[int(self.index_frame)]
@@ -127,17 +132,22 @@ class Poupy(pygame.sprite.Sprite):
                 self.rect.y += 2
             if self.index_frame >= len(self.img_right):
                 self.index_frame = 0
-                self.update_action(0)
-# ERRO AQUI
 
         elif self.action == 5:
             # pygame.time.set_timer(self.timer_andar, 0)
-            print("entrou 22")
             self.image = self.img_afago[int(self.index_frame)]
             self.index_frame += 0.05
             if self.index_frame >= len(self.img_afago):
                 self.index_frame = 0
                 self.update_action(0)
+
+        elif self.action == 6:
+            print("entrou 22")
+            # pygame.time.set_timer(self.timer_andar, 0)
+            self.image = self.img_comer[int(self.index_frame)]
+            self.index_frame += 0.05
+            if self.index_frame >= len(self.img_comer):
+                self.index_frame = 0
 
         self.image = pygame.transform.scale(self.image, (120, 130))
 
