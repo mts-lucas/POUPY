@@ -8,7 +8,7 @@ from classe_botao_comida import Alimento_Button
 from classe_botao_sabao import Soap_Button
 from classe_sabao import Soap
 from random import randint
-from constantes import ALTURA_JANELA, LARGURA_JANELA
+from constantes import ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO
 
 pygame.init()
 
@@ -19,12 +19,10 @@ pygame.mixer.music.load("trilha sonora/BoxCat Games - Young Love.mp3")
 pygame.mixer.music.play(-1)
 
 tela_fundo = pygame.image.load('sprites/telafundo.png')
-tela_fundo = pygame.transform.scale(
-    tela_fundo, (LARGURA_JANELA, ALTURA_JANELA))
+tela_fundo = pygame.transform.scale(tela_fundo, (LARGURA_JANELA, ALTURA_JANELA))
 
 tela_jogo = pygame.display.set_mode((LARGURA_JANELA, ALTURA_JANELA))
 pygame.display.set_caption("Poupy")
-relogio_jogo = pygame.time.Clock()
 
 todas_as_sprites = pygame.sprite.Group()
 bixinho = Poupy()
@@ -45,7 +43,7 @@ while True:
     mouse_pos = pygame.mouse.get_pos()
     mouse_button1 = pygame.mouse.get_pressed()[0]
 
-    relogio_jogo.tick(60)  # 30 fps
+    RELOGIO_JOGO.tick(60)  # 60 fps
     tela_jogo.fill((0, 0, 0))  # cor da tela preta
     pygame.mouse.set_visible(False)
 

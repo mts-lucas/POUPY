@@ -28,3 +28,4 @@ SPRITE_AFAGADO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'link_sprites
 
 LARGURA_JANELA = 640
 ALTURA_JANELA = 480
+RELOGIO_JOGO = pygame.time.Clock()
