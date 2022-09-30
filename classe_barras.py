@@ -10,4 +10,4 @@ class Barras(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.img_barra = ler_imagens(0, 15, SPRITES_BARRAS, 120, 130)
+        self.img_barra = ler_imagens(0, 15, SPRITES_BARRAS, 60, 20)
