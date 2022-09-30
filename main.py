@@ -7,6 +7,7 @@ from classe_comida import Alimento
 from classe_botao_comida import Alimento_Button
 from classe_botao_sabao import Soap_Button
 from classe_sabao import Soap
+from classe_barras import Barras
 from random import randint
 from constantes import ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO
 
@@ -19,7 +20,8 @@ pygame.mixer.music.load("trilha sonora/BoxCat Games - Young Love.mp3")
 pygame.mixer.music.play(-1)
 
 tela_fundo = pygame.image.load('sprites/telafundo.png')
-tela_fundo = pygame.transform.scale(tela_fundo, (LARGURA_JANELA, ALTURA_JANELA))
+tela_fundo = pygame.transform.scale(
+    tela_fundo, (LARGURA_JANELA, ALTURA_JANELA))
 
 tela_jogo = pygame.display.set_mode((LARGURA_JANELA, ALTURA_JANELA))
 pygame.display.set_caption("Poupy")
@@ -28,6 +30,17 @@ todas_as_sprites = pygame.sprite.Group()
 bixinho = Poupy()
 botao_comida = Alimento_Button()
 botao_sabao = Soap_Button()
+
+sprite_barra_vida = pygame.sprite.Group()
+sprite_barra_limpo = pygame.sprite.Group()
+sprite_barra_feliz = pygame.sprite.Group()
+barra_vida = Barras(bixinho.fome, 30, 30)
+barra_limpo = Barras(bixinho.limpo, 30, 60)
+barra_felicidade = Barras(bixinho.feliz, 30, 90)
+sprite_barra_vida.add(barra_vida)
+sprite_barra_limpo.add(barra_limpo)
+sprite_barra_feliz.add(barra_felicidade)
+
 todas_as_sprites.add(botao_sabao)
 todas_as_sprites.add(bixinho)
 todas_as_sprites.add(botao_comida)
@@ -71,7 +84,6 @@ while True:
                 sabao = Soap(mouse_pos)
                 todas_as_sprites.add(sabao)
                 sabao_existe = True
-                                   
 
         if event.type == pygame.USEREVENT + 2:
             pygame.time.set_timer(maca.sumir, 0)
@@ -89,7 +101,7 @@ while True:
         if sabao_existe == True:
             grupo_sabao.add(sabao)
             colisoes = pygame.sprite.spritecollide(
-            bixinho, grupo_sabao, False, pygame.sprite.collide_mask)
+                bixinho, grupo_sabao, False, pygame.sprite.collide_mask)
 
             if colisoes:
                 sabao.usando = True
@@ -103,7 +115,8 @@ while True:
                 bixinho.newy = maca.rect.y - 66
 
             grupo_comida.add(maca)
-            colisoes2 = pygame.sprite.spritecollide(bixinho, grupo_comida, False, pygame.sprite.collide_mask)
+            colisoes2 = pygame.sprite.spritecollide(
+                bixinho, grupo_comida, False, pygame.sprite.collide_mask)
 
             if colisoes2:
                 bixinho.newx = bixinho.rect.x
@@ -115,8 +128,6 @@ while True:
                     bixinho.comendo = False
                     continua_andando = True
                     comida_existe = False
-                
-
 
     if mouse_button1 == True and bixinho.rect.collidepoint(mouse_pos):
         continua_andando = False
@@ -127,9 +138,11 @@ while True:
     if bixinho.action == 0:
         continua_andando = True
 
-
     tela_jogo.blit(tela_fundo, (0, 0))
     todas_as_sprites.draw(tela_jogo)
+    sprite_barra_vida.update(bixinho.fome)
+    sprite_barra_limpo.update(bixinho.limpo)
+    sprite_barra_feliz.update(bixinho.feliz)
     todas_as_sprites.update()
     pygame.display.flip()
 

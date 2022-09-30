@@ -23,7 +23,6 @@ class Poupy(pygame.sprite.Sprite):
         self.image = self.img_stoped[self.index_frame]
         self.image = pygame.transform.scale(self.image, (120, 130))
         self.mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect()
         
         #setando a variave de controle do movimento
         self.timer_andar = pygame.USEREVENT + 1
@@ -40,8 +39,8 @@ class Poupy(pygame.sprite.Sprite):
         self.comendo = False
 
         #parametros de vida
-        self.fome = 100
-        self.limpo = 100
+        self.fome = 150
+        self.limpo = 150
         self.feliz = (self.fome + self.limpo)/2
 
         self.descer_fome = pygame.USEREVENT + 4
