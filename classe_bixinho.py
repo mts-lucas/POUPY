@@ -23,19 +23,32 @@ class Poupy(pygame.sprite.Sprite):
         self.image = self.img_stoped[self.index_frame]
         self.image = pygame.transform.scale(self.image, (120, 130))
         self.mask = pygame.mask.from_surface(self.image)
-
         self.rect = self.image.get_rect()
-
+        
+        #setando a variave de controle do movimento
         self.timer_andar = pygame.USEREVENT + 1
         pygame.time.set_timer(self.timer_andar, 5000)
+        #setando o rect da sprite e gerando a posição inicial
         self.newx = 300
         self.newy = 300
         self.x = 300
         self.y = 300
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
+        #variaveis de controle
         self.afagado = False
         self.comendo = False
+
+        #parametros de vida
+        self.fome = 100
+        self.limpo = 100
+        self.feliz = (self.fome + self.limpo)/2
+
+        self.descer_fome = pygame.USEREVENT + 4
+        pygame.time.set_timer(self.descer_fome, 25000)
+
+        self.descer_limpeza = pygame.USEREVENT + 5
+        pygame.time.set_timer(self.descer_limpeza, 25000)
 
     def update(self):
 
