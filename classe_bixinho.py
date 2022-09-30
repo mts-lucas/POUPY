@@ -39,15 +39,15 @@ class Poupy(pygame.sprite.Sprite):
         self.comendo = False
 
         #parametros de vida
-        self.fome = 150
-        self.limpo = 150
-        self.feliz = (self.fome + self.limpo)/2
+        self.fome = 150.00
+        self.limpo = 150.00
+        self.feliz = (self.fome + self.limpo)//2
 
         self.descer_fome = pygame.USEREVENT + 4
         pygame.time.set_timer(self.descer_fome, 5000)
 
         self.descer_limpeza = pygame.USEREVENT + 5
-        pygame.time.set_timer(self.descer_limpeza, 10000)
+        pygame.time.set_timer(self.descer_limpeza, 5000)
 
     def update(self):
 
@@ -162,6 +162,7 @@ class Poupy(pygame.sprite.Sprite):
                 self.index_frame = 0
 
         self.image = pygame.transform.scale(self.image, (120, 130))
+        self.feliz = (self.fome + self.limpo)//2
 
     def update_action(self, new_action):
         print(new_action, self.action)

@@ -20,12 +20,15 @@ class Barras(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = self.x, self.y
 
-    def update(self, estado):
-        if estado == (self.estado_atual - 10):
-            self.ultimo_estado = estado
-            self.index_frame += 1
-        
+    def update(self):
+
         self.image = self.img_barra[int(self.index_frame)]
         self.image = pygame.transform.scale(self.image, (60, 20))
+
+    def descer_barra(self, estado):
+        if estado == (self.estado_atual - 10) and self.index_frame <= 15:
+            self.index_frame += 1
+            self.estado_atual = estado
+
             
 

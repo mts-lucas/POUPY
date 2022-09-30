@@ -98,10 +98,15 @@ while True:
             sabao_existe = False
 
         if event.type == bixinho.descer_fome:
-            bixinho.fome -= 10
+            bixinho.fome -= 5
+            barra_fome.descer_barra(bixinho.fome)
+            barra_felicidade.descer_barra(bixinho.feliz)
+
 
         if event.type == bixinho.descer_limpeza:
-            bixinho.limpo -= 10  
+            bixinho.limpo -= 5  
+            barra_limpo.descer_barra(bixinho.limpo)
+            barra_felicidade.descer_barra(bixinho.feliz)
 
         if sabao_existe == True:
             grupo_sabao.add(sabao)
@@ -147,9 +152,9 @@ while True:
     sprite_barra_fome.draw(tela_jogo)
     sprite_barra_limpo.draw(tela_jogo)
     sprite_barra_feliz.draw(tela_jogo)
-    sprite_barra_fome.update(bixinho.fome)
-    sprite_barra_limpo.update(bixinho.limpo)
-    sprite_barra_feliz.update(bixinho.feliz)
+    sprite_barra_fome.update()
+    sprite_barra_feliz.update()
+    sprite_barra_limpo.update()
     todas_as_sprites.update()
     pygame.display.flip()
 
