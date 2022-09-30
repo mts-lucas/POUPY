@@ -20,8 +20,7 @@ pygame.mixer.music.load("trilha sonora/BoxCat Games - Young Love.mp3")
 pygame.mixer.music.play(-1)
 
 tela_fundo = pygame.image.load('sprites/telafundo.png')
-tela_fundo = pygame.transform.scale(
-    tela_fundo, (LARGURA_JANELA, ALTURA_JANELA))
+tela_fundo = pygame.transform.scale(tela_fundo, (LARGURA_JANELA, ALTURA_JANELA))
 
 tela_jogo = pygame.display.set_mode((LARGURA_JANELA, ALTURA_JANELA))
 pygame.display.set_caption("Poupy")
@@ -31,13 +30,13 @@ bixinho = Poupy()
 botao_comida = Alimento_Button()
 botao_sabao = Soap_Button()
 
-sprite_barra_vida = pygame.sprite.Group()
+sprite_barra_fome = pygame.sprite.Group()
 sprite_barra_limpo = pygame.sprite.Group()
 sprite_barra_feliz = pygame.sprite.Group()
-barra_vida = Barras(bixinho.fome, 30, 30)
-barra_limpo = Barras(bixinho.limpo, 30, 60)
-barra_felicidade = Barras(bixinho.feliz, 30, 90)
-sprite_barra_vida.add(barra_vida)
+barra_fome = Barras(bixinho.fome, 30, 20)
+barra_limpo = Barras(bixinho.limpo, 30, 45)
+barra_felicidade = Barras(bixinho.feliz, 30, 70)
+sprite_barra_fome.add(barra_fome)
 sprite_barra_limpo.add(barra_limpo)
 sprite_barra_feliz.add(barra_felicidade)
 
@@ -98,10 +97,15 @@ while True:
             del sabao
             sabao_existe = False
 
+        if event.type == bixinho.descer_fome:
+            bixinho.fome -= 10
+
+        if event.type == bixinho.descer_limpeza:
+            bixinho.limpo -= 10  
+
         if sabao_existe == True:
             grupo_sabao.add(sabao)
-            colisoes = pygame.sprite.spritecollide(
-                bixinho, grupo_sabao, False, pygame.sprite.collide_mask)
+            colisoes = pygame.sprite.spritecollide(bixinho, grupo_sabao, False, pygame.sprite.collide_mask)
 
             if colisoes:
                 sabao.usando = True
@@ -140,7 +144,10 @@ while True:
 
     tela_jogo.blit(tela_fundo, (0, 0))
     todas_as_sprites.draw(tela_jogo)
-    sprite_barra_vida.update(bixinho.fome)
+    sprite_barra_fome.draw(tela_jogo)
+    sprite_barra_limpo.draw(tela_jogo)
+    sprite_barra_feliz.draw(tela_jogo)
+    sprite_barra_fome.update(bixinho.fome)
     sprite_barra_limpo.update(bixinho.limpo)
     sprite_barra_feliz.update(bixinho.feliz)
     todas_as_sprites.update()

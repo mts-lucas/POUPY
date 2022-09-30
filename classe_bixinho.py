@@ -44,10 +44,10 @@ class Poupy(pygame.sprite.Sprite):
         self.feliz = (self.fome + self.limpo)/2
 
         self.descer_fome = pygame.USEREVENT + 4
-        pygame.time.set_timer(self.descer_fome, 25000)
+        pygame.time.set_timer(self.descer_fome, 5000)
 
         self.descer_limpeza = pygame.USEREVENT + 5
-        pygame.time.set_timer(self.descer_limpeza, 25000)
+        pygame.time.set_timer(self.descer_limpeza, 10000)
 
     def update(self):
 
