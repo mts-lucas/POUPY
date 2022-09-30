@@ -30,5 +30,10 @@ class Barras(pygame.sprite.Sprite):
             self.index_frame += 1
             self.estado_atual = estado
 
+    def subir_barra(self, estado):
+        if estado == (self.estado_atual + 10) and self.index_frame >= 0:
+            self.index_frame -= 1
+            self.estado_atual = estado
+
             
 

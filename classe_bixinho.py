@@ -154,7 +154,7 @@ class Poupy(pygame.sprite.Sprite):
                 self.update_action(0)
 
         elif self.action == 6:
-            print("entrou 22")
+            # print("entrou 22")
             # pygame.time.set_timer(self.timer_andar, 0)
             self.image = self.img_comer[int(self.index_frame)]
             self.index_frame += 0.05
@@ -165,7 +165,7 @@ class Poupy(pygame.sprite.Sprite):
         self.feliz = (self.fome + self.limpo)//2
 
     def update_action(self, new_action):
-        print(new_action, self.action)
+        # print(new_action, self.action)
         if new_action != self.action:
             self.action = new_action
             self.index_frame = 0

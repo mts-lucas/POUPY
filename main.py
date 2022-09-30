@@ -30,19 +30,16 @@ bixinho = Poupy()
 botao_comida = Alimento_Button()
 botao_sabao = Soap_Button()
 
-sprite_barra_fome = pygame.sprite.Group()
-sprite_barra_limpo = pygame.sprite.Group()
-sprite_barra_feliz = pygame.sprite.Group()
+
 barra_fome = Barras(bixinho.fome, 30, 20)
 barra_limpo = Barras(bixinho.limpo, 30, 45)
 barra_felicidade = Barras(bixinho.feliz, 30, 70)
-sprite_barra_fome.add(barra_fome)
-sprite_barra_limpo.add(barra_limpo)
-sprite_barra_feliz.add(barra_felicidade)
-
 todas_as_sprites.add(botao_sabao)
 todas_as_sprites.add(bixinho)
 todas_as_sprites.add(botao_comida)
+todas_as_sprites.add(barra_fome)
+todas_as_sprites.add(barra_felicidade)
+todas_as_sprites.add(barra_limpo)
 travar_comida = False
 mouse = Hand(pygame.mouse.get_pos())
 todas_as_sprites.add(mouse)
@@ -98,13 +95,22 @@ while True:
             sabao_existe = False
 
         if event.type == bixinho.descer_fome:
-            bixinho.fome -= 5
+            if bixinho.fome <= 0:
+                bixinho.fome = 0
+
+            else:
+                bixinho.fome -= 5
+
             barra_fome.descer_barra(bixinho.fome)
             barra_felicidade.descer_barra(bixinho.feliz)
 
 
         if event.type == bixinho.descer_limpeza:
-            bixinho.limpo -= 5  
+            if bixinho.limpo <= 0:
+                bixinho.limpo = 0
+            else:
+                bixinho.limpo -= 5  
+
             barra_limpo.descer_barra(bixinho.limpo)
             barra_felicidade.descer_barra(bixinho.feliz)
 
@@ -114,6 +120,8 @@ while True:
 
             if colisoes:
                 sabao.usando = True
+                bixinho.limpo += 0.5
+                barra_limpo.subir_barra(bixinho.limpo)
             else:
                 sabao.usando = False
 
@@ -123,16 +131,17 @@ while True:
                 bixinho.newx = maca.rect.x - 64
                 bixinho.newy = maca.rect.y - 66
 
-            grupo_comida.add(maca)
-            colisoes2 = pygame.sprite.spritecollide(
-                bixinho, grupo_comida, False, pygame.sprite.collide_mask)
+                grupo_comida.add(maca)
+                colisoes2 = pygame.sprite.spritecollide(bixinho, grupo_comida, False, pygame.sprite.collide_mask)
 
-            if colisoes2:
-                bixinho.newx = bixinho.rect.x
-                bixinho.newy = bixinho.rect.y
-                bixinho.comendo = True
-                maca.sendo_comido()
+                if colisoes2:
+                    bixinho.newx = bixinho.rect.x
+                    bixinho.newy = bixinho.rect.y
+                    bixinho.comendo = True
+                    maca.sendo_comido()
                 if maca.foi_comida == True:
+                    bixinho.fome += 10
+                    barra_fome.subir_barra(bixinho.fome)
                     pygame.time.set_timer(maca.sumir, 8000)
                     bixinho.comendo = False
                     continua_andando = True
@@ -149,12 +158,6 @@ while True:
 
     tela_jogo.blit(tela_fundo, (0, 0))
     todas_as_sprites.draw(tela_jogo)
-    sprite_barra_fome.draw(tela_jogo)
-    sprite_barra_limpo.draw(tela_jogo)
-    sprite_barra_feliz.draw(tela_jogo)
-    sprite_barra_fome.update()
-    sprite_barra_feliz.update()
-    sprite_barra_limpo.update()
     todas_as_sprites.update()
     pygame.display.flip()
 
