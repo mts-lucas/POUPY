@@ -26,12 +26,12 @@ class Barras(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (60, 20))
 
     def descer_barra(self, estado):
-        if estado == (self.estado_atual - 10) and self.index_frame <= 15:
+        if estado == (self.estado_atual - 10) and self.index_frame < 15:
             self.index_frame += 1
             self.estado_atual = estado
 
     def subir_barra(self, estado):
-        if estado == (self.estado_atual + 10) and self.index_frame >= 0:
+        if estado == (self.estado_atual + 10) and self.index_frame > 0:
             self.index_frame -= 1
             self.estado_atual = estado
 
