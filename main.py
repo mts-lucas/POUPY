@@ -120,7 +120,11 @@ while True:
 
             if colisoes:
                 sabao.usando = True
-                bixinho.limpo += 0.5
+                if bixinho.limpo >= 150:
+                    bixinho.limpo = 150
+                else:
+                    bixinho.limpo += 0.5
+                    
                 barra_limpo.subir_barra(bixinho.limpo)
             else:
                 sabao.usando = False
@@ -140,7 +144,13 @@ while True:
                     bixinho.comendo = True
                     maca.sendo_comido()
                 if maca.foi_comida == True:
-                    bixinho.fome += 10
+                    if bixinho.fome >= 150:
+
+                        bixinho.fome = 150
+
+                    else:
+                        bixinho.fome += 10
+
                     barra_fome.subir_barra(bixinho.fome)
                     pygame.time.set_timer(maca.sumir, 8000)
                     bixinho.comendo = False
