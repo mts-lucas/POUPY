@@ -9,7 +9,7 @@ from classe_botao_sabao import Soap_Button
 from classe_sabao import Soap
 from classe_barras import Barras
 from random import randint
-from constantes import ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO
+from constantes import ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO, PRETO
 
 pygame.init()
 
@@ -50,12 +50,11 @@ grupo_comida = pygame.sprite.Group()
 continua_andando = True
 
 while True:
-
+    
     mouse_pos = pygame.mouse.get_pos()
     mouse_button1 = pygame.mouse.get_pressed()[0]
-
     RELOGIO_JOGO.tick(60)  # 60 fps
-    tela_jogo.fill((0, 0, 0))  # cor da tela preta
+    tela_jogo.fill(PRETO)  # cor da tela preta
     pygame.mouse.set_visible(False)
 
     for event in pygame.event.get():

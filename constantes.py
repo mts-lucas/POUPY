@@ -31,3 +31,7 @@ SPRITES_BARRAS = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_vida.p
 LARGURA_JANELA = 640
 ALTURA_JANELA = 480
 RELOGIO_JOGO = pygame.time.Clock()
+
+#core
+
+PRETO = (0, 0, 0)
