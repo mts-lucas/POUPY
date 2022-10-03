@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import os
 import pickle
+# from classe_bixinho import Poupy
 
 pygame.init()
 
@@ -18,11 +19,12 @@ def recuperar_progresso(): # func ler prog em arquivo
         arquivo = open("save_bixinho.dat", "rb")
         bixinho = pickle.load(arquivo)
         arquivo.close()
+        return bixinho
     except:
+
         arquivo = open("save_bixinho.dat", "wb")
         arquivo.close()
-
-    return bixinho
+        return False
 
 def ler_imagens(primeiro_numero, segundo_numero, sprite, xsprite, ysprite):
     lista_imagens = []

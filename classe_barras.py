@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 from constantes import ler_imagens, SPRITES_BARRAS
 
-
 pygame.init()
 
 

@@ -9,7 +9,7 @@ from classe_botao_sabao import Soap_Button
 from classe_sabao import Soap
 from classe_barras import Barras
 from random import randint
-from constantes import ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO, PRETO, FONTE_CS, POSICAO_RELOGIO, TELA_FUNDO, add_sprites_grupo
+from constantes import ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO, PRETO, FONTE_CS, POSICAO_RELOGIO, TELA_FUNDO, add_sprites_grupo, salvar_progresso, recuperar_progresso
 from datetime import datetime
 
 pygame.init()
@@ -24,7 +24,10 @@ TELA_FUNDO = pygame.transform.scale(TELA_FUNDO, (LARGURA_JANELA, ALTURA_JANELA))
 tela_jogo = pygame.display.set_mode((LARGURA_JANELA, ALTURA_JANELA))
 pygame.display.set_caption("Poupy")
 
-bixinho = Poupy()
+# bixinho = Poupy()
+bixinho = recuperar_progresso()
+if bixinho == False:
+    bixinho = Poupy()
 botao_comida = Alimento_Button()
 botao_sabao = Soap_Button()
 barra_fome = Barras(bixinho.fome, 30, 20)
@@ -55,6 +58,7 @@ while True:
     for event in pygame.event.get():
 
         if event.type == QUIT:
+            salvar_progresso(bixinho)
             pygame.quit()
             exit()
 
