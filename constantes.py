@@ -49,8 +49,13 @@ SPRITES_BARRAS = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_vida.p
 
 LARGURA_JANELA = 640
 ALTURA_JANELA = 480
+POSICAO_RELOGIO = (500, 10)
 RELOGIO_JOGO = pygame.time.Clock()
 
 #core
 
 PRETO = (0, 0, 0)
+
+#Fontes
+
+FONTE_CS = pygame.font.SysFont("comicsansms", 40, True, True)

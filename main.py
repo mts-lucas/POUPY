@@ -9,7 +9,8 @@ from classe_botao_sabao import Soap_Button
 from classe_sabao import Soap
 from classe_barras import Barras
 from random import randint
-from constantes import ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO, PRETO
+from constantes import ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO, PRETO, FONTE_CS, POSICAO_RELOGIO
+from datetime import datetime
 
 pygame.init()
 
@@ -51,6 +52,11 @@ continua_andando = True
 
 while True:
     
+    #Mostrando horario no jogo:
+    hora_atual = datetime.now()
+    hora_em_texto = hora_atual.strftime('%H:%M')
+    hora_formatada = FONTE_CS.render(hora_em_texto, True, (255, 255, 255))
+
     mouse_pos = pygame.mouse.get_pos()
     mouse_button1 = pygame.mouse.get_pressed()[0]
     RELOGIO_JOGO.tick(60)  # 60 fps
@@ -166,6 +172,7 @@ while True:
         continua_andando = True
 
     tela_jogo.blit(tela_fundo, (0, 0))
+    tela_jogo.blit(hora_formatada, POSICAO_RELOGIO)
     todas_as_sprites.draw(tela_jogo)
     todas_as_sprites.update()
     pygame.display.flip()
