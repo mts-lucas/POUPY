@@ -21,7 +21,6 @@ pygame.mixer.music.load("trilha sonora/BoxCat Games - Young Love.mp3")
 pygame.mixer.music.play(-1)
 
 TELA_FUNDO = pygame.transform.scale(TELA_FUNDO, (LARGURA_JANELA, ALTURA_JANELA))
-
 tela_jogo = pygame.display.set_mode((LARGURA_JANELA, ALTURA_JANELA))
 pygame.display.set_caption("Poupy")
 
