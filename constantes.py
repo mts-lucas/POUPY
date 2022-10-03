@@ -1,9 +1,28 @@
 import pygame
 from pygame.locals import *
 import os
+import pickle
 
 pygame.init()
 
+
+
+def salvar_progresso(bixinho):  # func guardar prog em arquivo
+    arquivo = open('save_bixinho.dat', 'wb')
+    pickle.dump(bixinho, arquivo)
+    arquivo.close()
+
+
+def recuperar_progresso(): # func ler prog em arquivo
+    try:
+        arquivo = open("save_bixinho.dat", "rb")
+        bixinho = pickle.load(arquivo)
+        arquivo.close()
+    except:
+        arquivo = open("save_bixinho.dat", "wb")
+        arquivo.close()
+
+    return bixinho
 
 def ler_imagens(primeiro_numero, segundo_numero, sprite, xsprite, ysprite):
     lista_imagens = []
