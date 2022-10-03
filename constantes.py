@@ -8,7 +8,8 @@ pygame.init()
 
 
 
-def salvar_progresso(bixinho):  # func guardar prog em arquivo
+def salvar_progresso(fome, limpeza):  # func guardar prog em arquivo
+    bixinho = (fome, limpeza)
     arquivo = open('save_bixinho.dat', 'wb')
     pickle.dump(bixinho, arquivo)
     arquivo.close()
@@ -18,13 +19,13 @@ def recuperar_progresso(): # func ler prog em arquivo
     try:
         arquivo = open("save_bixinho.dat", "rb")
         bixinho = pickle.load(arquivo)
-        arquivo.close()
-        return bixinho
+        arquivo.close() 
     except:
 
         arquivo = open("save_bixinho.dat", "wb")
         arquivo.close()
-        return False
+    
+    return bixinho
 
 def ler_imagens(primeiro_numero, segundo_numero, sprite, xsprite, ysprite):
     lista_imagens = []
