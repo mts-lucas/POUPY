@@ -15,7 +15,7 @@ def salvar_progresso(fome, limpeza):  # func guardar prog em arquivo
     arquivo.close()
 
 
-def recuperar_progresso(): # func ler prog em arquivo
+def recuperar_progresso(fome, limpeza): # func ler prog em arquivo
     try:
         arquivo = open("save_bixinho.dat", "rb")
         bixinho = pickle.load(arquivo)
@@ -24,6 +24,7 @@ def recuperar_progresso(): # func ler prog em arquivo
 
         arquivo = open("save_bixinho.dat", "wb")
         arquivo.close()
+        bixinho = (fome, limpeza)
     
     return bixinho
 
