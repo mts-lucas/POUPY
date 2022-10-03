@@ -32,6 +32,14 @@ def ler_imagens(primeiro_numero, segundo_numero, sprite, xsprite, ysprite):
 
     return lista_imagens
 
+def add_sprites_grupo(*sprites):
+    spritegroup = pygame.sprite.Group() 
+    for sprite in sprites:
+        spritegroup.add(sprite)
+
+    return spritegroup
+
+
 
 DIRETORIO_PRINCIPAL = os.path.dirname(__file__)
 DIRETORIO_IMAGENS = os.path.join(DIRETORIO_PRINCIPAL, 'sprites')
@@ -45,6 +53,7 @@ SPRITE_MOUSE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'mouse_sprites.
 SPRITE_AFAGADO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'link_sprites_afago.png'))
 SPRITE_COMENDO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'link_sprites_comendo.png'))
 SPRITES_BARRAS = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_vida.png'))
+TELA_FUNDO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'telafundo.png'))
 
 
 LARGURA_JANELA = 640

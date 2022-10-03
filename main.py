@@ -9,7 +9,7 @@ from classe_botao_sabao import Soap_Button
 from classe_sabao import Soap
 from classe_barras import Barras
 from random import randint
-from constantes import ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO, PRETO, FONTE_CS, POSICAO_RELOGIO
+from constantes import ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO, PRETO, FONTE_CS, POSICAO_RELOGIO, TELA_FUNDO, add_sprites_grupo
 from datetime import datetime
 
 pygame.init()
@@ -20,30 +20,20 @@ pygame.mixer.music.set_volume(0.50)
 pygame.mixer.music.load("trilha sonora/BoxCat Games - Young Love.mp3")
 pygame.mixer.music.play(-1)
 
-tela_fundo = pygame.image.load('sprites/telafundo.png')
-tela_fundo = pygame.transform.scale(tela_fundo, (LARGURA_JANELA, ALTURA_JANELA))
+TELA_FUNDO = pygame.transform.scale(TELA_FUNDO, (LARGURA_JANELA, ALTURA_JANELA))
 
 tela_jogo = pygame.display.set_mode((LARGURA_JANELA, ALTURA_JANELA))
 pygame.display.set_caption("Poupy")
 
-todas_as_sprites = pygame.sprite.Group()
 bixinho = Poupy()
 botao_comida = Alimento_Button()
 botao_sabao = Soap_Button()
-
-
 barra_fome = Barras(bixinho.fome, 30, 20)
 barra_limpo = Barras(bixinho.limpo, 30, 45)
 barra_felicidade = Barras(bixinho.feliz, 30, 70)
-todas_as_sprites.add(botao_sabao)
-todas_as_sprites.add(bixinho)
-todas_as_sprites.add(botao_comida)
-todas_as_sprites.add(barra_fome)
-todas_as_sprites.add(barra_felicidade)
-todas_as_sprites.add(barra_limpo)
-travar_comida = False
 mouse = Hand(pygame.mouse.get_pos())
-todas_as_sprites.add(mouse)
+todas_as_sprites = add_sprites_grupo(botao_sabao, bixinho, botao_comida, barra_fome, barra_felicidade, barra_limpo, mouse)
+travar_comida = False
 sabao_existe = False
 comida_existe = False
 grupo_sabao = pygame.sprite.Group()
@@ -171,7 +161,7 @@ while True:
     if bixinho.action == 0:
         continua_andando = True
 
-    tela_jogo.blit(tela_fundo, (0, 0))
+    tela_jogo.blit(TELA_FUNDO, (0, 0))
     tela_jogo.blit(hora_formatada, POSICAO_RELOGIO)
     todas_as_sprites.draw(tela_jogo)
     todas_as_sprites.update()
