@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 import os
 import pickle
-# from classe_bixinho import Poupy
+# from poupy.entidades.bixinho import Poupy
 
 pygame.init()
 
@@ -45,9 +45,9 @@ def add_sprites_grupo(*sprites):
 
 
 
-DIRETORIO_PRINCIPAL = os.path.dirname(__file__)
-DIRETORIO_IMAGENS = os.path.join(DIRETORIO_PRINCIPAL, 'sprites')
-DIRETORIO_SONS = os.path.join(DIRETORIO_PRINCIPAL, 'trilha sonora')
+DIRETORIO_PRINCIPAL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DIRETORIO_IMAGENS = os.path.join(DIRETORIO_PRINCIPAL, 'assets', 'sprites')
+DIRETORIO_SONS = os.path.join(DIRETORIO_PRINCIPAL, 'assets', 'musica')
 SPRITE_SHEET = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'link_sprites.png'))
 SPRITE_COMIDA = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'apple.png'))
 SPRITE_BUT_COMIDA = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'apple_button.png'))

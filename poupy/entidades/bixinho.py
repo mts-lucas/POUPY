@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from constantes import ler_imagens, SPRITE_SHEET, SPRITE_AFAGADO, SPRITE_COMENDO
+from poupy.constantes import ler_imagens, SPRITE_SHEET, SPRITE_AFAGADO, SPRITE_COMENDO
 
 
 pygame.init()

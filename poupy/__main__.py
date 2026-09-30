@@ -1,15 +1,16 @@
 import pygame
 from pygame.locals import *
+import os
 from sys import exit
-from classe_bixinho import Poupy
-from classe_mouse import Hand
-from classe_comida import Alimento
-from classe_botao_comida import Alimento_Button
-from classe_botao_sabao import Soap_Button
-from classe_sabao import Soap
-from classe_barras import Barras
+from poupy.entidades.bixinho import Poupy
+from poupy.entidades.mouse import Hand
+from poupy.entidades.comida import Alimento
+from poupy.entidades.botao_comida import Alimento_Button
+from poupy.entidades.botao_sabao import Soap_Button
+from poupy.entidades.sabao import Soap
+from poupy.entidades.barras import Barras
 from random import randint
-from constantes import ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO, PRETO, FONTE_CS, POSICAO_RELOGIO, TELA_FUNDO, add_sprites_grupo, recuperar_progresso, salvar_progresso
+from poupy.constantes import DIRETORIO_SONS, ALTURA_JANELA, LARGURA_JANELA, RELOGIO_JOGO, PRETO, FONTE_CS, POSICAO_RELOGIO, TELA_FUNDO, add_sprites_grupo, recuperar_progresso, salvar_progresso
 from datetime import datetime
 
 pygame.init()
@@ -17,7 +18,7 @@ pygame.init()
 # musica de fundo do jogo
 
 pygame.mixer.music.set_volume(0.50)
-pygame.mixer.music.load("trilha sonora/BoxCat Games - Young Love.mp3")
+pygame.mixer.music.load(os.path.join(DIRETORIO_SONS, "BoxCat Games - Young Love.mp3"))
 pygame.mixer.music.play(-1)
 
 TELA_FUNDO = pygame.transform.scale(TELA_FUNDO, (LARGURA_JANELA, ALTURA_JANELA))

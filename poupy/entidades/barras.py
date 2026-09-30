@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from constantes import ler_imagens, SPRITES_BARRAS
+from poupy.constantes import ler_imagens, SPRITES_BARRAS
 
 pygame.init()
 

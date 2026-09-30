@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from constantes import SPRITE_MOUSE
+from poupy.constantes import SPRITE_MOUSE
 
 
 pygame.init()
