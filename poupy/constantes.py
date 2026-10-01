@@ -1,32 +1,38 @@
+import json
+import os
+from pathlib import Path
+from typing import Optional
+
 import pygame
 from pygame.locals import *
-import os
-import pickle
-# from poupy.entidades.bixinho import Poupy
 
 pygame.init()
 
 
-
-def salvar_progresso(fome, limpeza):  # func guardar prog em arquivo
-    bixinho = (fome, limpeza)
-    arquivo = open('save_bixinho.dat', 'wb')
-    pickle.dump(bixinho, arquivo)
-    arquivo.close()
+def salvar_progresso(nome, fome, limpeza):  # func guardar prog em arquivo
+    bixinho = {"nome": nome, "fome": fome, "limpeza": limpeza}
+    with open(ARQUIVO_SAVE, "w", encoding="utf-8") as arquivo:
+        json.dump(bixinho, arquivo)
 
 
-def recuperar_progresso(fome, limpeza): # func ler prog em arquivo
+def recuperar_progresso() -> Optional[dict]:  # func ler prog em arquivo
+    """Lê o save; devolve None se não existir ou se estiver inválido."""
     try:
-        arquivo = open("save_bixinho.dat", "rb")
-        bixinho = pickle.load(arquivo)
-        arquivo.close() 
-    except:
+        with open(ARQUIVO_SAVE, "r", encoding="utf-8") as arquivo:
+            bixinho = json.load(arquivo)
+        return {
+            "nome": str(bixinho["nome"]),
+            "fome": float(bixinho["fome"]),
+            "limpeza": float(bixinho["limpeza"]),
+        }
+    except (FileNotFoundError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+        return None
 
-        arquivo = open("save_bixinho.dat", "wb")
-        arquivo.close()
-        bixinho = (fome, limpeza)
-    
-    return bixinho
+
+def existe_save() -> bool:
+    """True se há um save válido para continuar."""
+    return recuperar_progresso() is not None
+
 
 def ler_imagens(primeiro_numero, segundo_numero, sprite, xsprite, ysprite, linha=0):
     lista_imagens = []
@@ -39,6 +45,8 @@ def ler_imagens(primeiro_numero, segundo_numero, sprite, xsprite, ysprite, linha
 DIRETORIO_PRINCIPAL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIRETORIO_IMAGENS = os.path.join(DIRETORIO_PRINCIPAL, 'assets', 'sprites')
 DIRETORIO_SONS = os.path.join(DIRETORIO_PRINCIPAL, 'assets', 'musica')
+DIRETORIO_FONTES = os.path.join(DIRETORIO_PRINCIPAL, 'assets', 'fontes')
+ARQUIVO_SAVE = Path(DIRETORIO_PRINCIPAL) / 'save_bixinho.json'
 LADO_SPRITE_COBRA = 32
 ESCALA_SPRITE_COBRA = 4
 SPRITE_COBRA_IDLE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_idle_32x32.png'))
@@ -64,6 +72,19 @@ SPRITE_BARRA_FOME = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_fom
 SPRITE_BARRA_LIMPEZA = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_limpeza_504x12.png'))
 SPRITE_BARRA_FELICIDADE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_felicidade_504x12.png'))
 TELA_FUNDO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'fundo_jardim_1920x1080.png'))
+SPRITE_TITULO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'titulo_poupy_200x43.png'))
+SPRITE_PAINEL_NOME = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'painel_nome_200x97.png'))
+SPRITE_BOTAO_JOGAR = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'botao_jogar_400x20.png'))
+SPRITE_BOTAO_CONTINUAR = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'botao_continuar_400x20.png'))
+SPRITE_BOTAO_CONFIRMAR = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'botao_confirmar_384x20.png'))
+SPRITE_BOTAO_VOLTAR = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'botao_voltar_288x20.png'))
+
+# fonte pixel art (Press Start 2P) para o nome do bixinho
+ARQUIVO_FONTE = os.path.join(DIRETORIO_FONTES, 'PressStart2P-Regular.ttf')
+TAMANHO_FONTE_HUD = 16
+TAMANHO_FONTE_ENTRADA = 24
+FONTE_NOME_HUD = pygame.font.Font(ARQUIVO_FONTE, TAMANHO_FONTE_HUD)
+FONTE_NOME_ENTRADA = pygame.font.Font(ARQUIVO_FONTE, TAMANHO_FONTE_ENTRADA)
 
 
 LARGURA_JANELA = 640
@@ -73,3 +94,6 @@ RELOGIO_JOGO = pygame.time.Clock()
 #core
 
 PRETO = (0, 0, 0)
+COR_TEXTO_HUD = (255, 244, 214)
+COR_SOMBRA_HUD = (59, 36, 18)
+COR_TEXTO_ENTRADA = (59, 36, 18)
