@@ -1,3 +1,4 @@
+import math
 import os
 import sys
 from datetime import datetime
@@ -32,14 +33,12 @@ VOLUME_MUSICA = 0.50
 BRANCO = (255, 255, 255)
 NOME_MUSICA = "BoxCat Games - Young Love.mp3"
 
-# eventos de timer das sprites que somem
-EVENTO_SABAO_SUMIR = pygame.USEREVENT + 3
-
 # limites e passos dos atributos do bixinho
 STATUS_MAXIMO = 150
 PASSO_DECAIMENTO = 5
 GANHO_COMIDA = 10
 GANHO_SABAO = 0.5
+QTD_ESPUMAS = 1
 
 # area onde o bixinho caminha
 ANDAR_X_MAX = 520
@@ -106,7 +105,6 @@ class Jogo:
 
         # itens que existem apenas enquanto estão em uso
         self.maca: Optional[Alimento] = None
-        self.sabao: Optional[Soap] = None
 
     # ---------------------------------------------------------------- eventos
 
@@ -121,8 +119,6 @@ class Jogo:
                 self._sortear_destino()
             elif evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                 self._tratar_clique(mouse_pos)
-            elif evento.type == EVENTO_SABAO_SUMIR:
-                self._remover_sabao()
             elif evento.type == self.bixinho.descer_fome:
                 self.bixinho.fome = max(0, self.bixinho.fome - PASSO_DECAIMENTO)
                 self.barra_fome.descer_barra(self.bixinho.fome)
@@ -139,7 +135,7 @@ class Jogo:
             self.bixinho.newy = randint(ANDAR_Y_MIN, ANDAR_Y_MAX)
 
     def _tratar_clique(self, mouse_pos: tuple[int, int]) -> None:
-        """Faz cair uma carne ou cria sabão quando o botão correspondente é clicado."""
+        """Faz cair uma carne ou inicia o banho quando o botão correspondente é clicado."""
         if self.botao_comida.rect.collidepoint(mouse_pos) and self.maca is None:
             self.maca = Alimento(
                 randint(CARNE_X_MIN, CARNE_X_MAX), randint(CARNE_Y_MIN, CARNE_Y_MAX)
@@ -147,17 +143,18 @@ class Jogo:
             self.todas_as_sprites.add(self.maca)
             self.grupo_comida.add(self.maca)
 
-        if self.botao_sabao.rect.collidepoint(mouse_pos):
-            self.sabao = Soap(mouse_pos)
-            self.todas_as_sprites.add(self.sabao)
-            self.grupo_sabao.add(self.sabao)
+        if self.botao_sabao.rect.collidepoint(mouse_pos) and not self.grupo_sabao:
+            self._iniciar_banho()
 
-    def _remover_sabao(self) -> None:
-        if self.sabao is None:
-            return
-        pygame.time.set_timer(self.sabao.sumir, 0)
-        self.sabao.kill()
-        self.sabao = None
+    def _iniciar_banho(self) -> None:
+        """Para o bixinho e faz as espumas surgirem girando em volta dele."""
+        for i in range(QTD_ESPUMAS):
+            espuma = Soap(self.bixinho, 2 * math.pi * i / QTD_ESPUMAS)
+            self.todas_as_sprites.add(espuma)
+            self.grupo_sabao.add(espuma)
+        self.continua_andando = False
+        self.bixinho.newx = self.bixinho.rect.x
+        self.bixinho.newy = self.bixinho.rect.y
 
     # ----------------------------------------------------------------- update
 
@@ -169,18 +166,17 @@ class Jogo:
         self.todas_as_sprites.update()
 
     def _atualizar_sabao(self) -> None:
-        if self.sabao is None:
-            self.bixinho.limpando = False
+        if not self.grupo_sabao:
+            if self.bixinho.limpando:
+                # banho acabou: libera o bixinho para passear
+                self.bixinho.limpando = False
+                self.continua_andando = True
             return
 
-        colisoes = pygame.sprite.spritecollide(
-            self.bixinho, self.grupo_sabao, False, pygame.sprite.collide_mask
-        )
-        self.sabao.usando = bool(colisoes)
-        self.bixinho.limpando = bool(colisoes)
-        if colisoes:
-            self.bixinho.limpo = min(STATUS_MAXIMO, self.bixinho.limpo + GANHO_SABAO)
-            self.barra_limpo.subir_barra(self.bixinho.limpo)
+        self.continua_andando = False
+        self.bixinho.limpando = True
+        self.bixinho.limpo = min(STATUS_MAXIMO, self.bixinho.limpo + GANHO_SABAO)
+        self.barra_limpo.subir_barra(self.bixinho.limpo)
 
     def _atualizar_comida(self) -> None:
         if self.maca is None:

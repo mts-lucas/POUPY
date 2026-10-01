@@ -1,45 +1,64 @@
+import math
+
 import pygame
-from pygame.locals import *
-from poupy.constantes import ler_imagens, SPRITE_SABAO
+
+from poupy.constantes import SPRITE_SABAO, ler_imagens
+
+LADO_QUADRO = 24
+ESCALA = 2
+LADO_FINAL = LADO_QUADRO * ESCALA
+QUADROS_SABAO = 6
+PRIMEIRO_QUADRO_ESPUMA = 2
+
+# duração fixa do banho (será trocada por outra condição)
+DURACAO_BANHO_MS = 4000
+DURACAO_QUADRO_MS = 150
+
+# elipse percorrida em volta do centro do bixinho
+RAIO_X = 40
+RAIO_Y = 25
+VOLTAS_POR_SEGUNDO = 0.5
 
 
-pygame.init()
+def _carregar_quadros() -> list[pygame.Surface]:
+    """Recorta os quadros da folha e já os escala para o tamanho de jogo."""
+    quadros = ler_imagens(0, QUADROS_SABAO, SPRITE_SABAO, LADO_QUADRO, LADO_QUADRO)
+    return [pygame.transform.scale(q, (LADO_FINAL, LADO_FINAL)) for q in quadros]
 
 
 class Soap(pygame.sprite.Sprite):
-    def __init__(self, mouse_pos):
-        pygame.sprite.Sprite.__init__(self)
-        self.sabao_usado = ler_imagens(0, 5, SPRITE_SABAO, 64, 64)
-        self.index_frame_sabao = 0
-        self.image = self.sabao_usado[self.index_frame_sabao]
-        self.image = pygame.transform.scale(self.image, (32 * 2, 32 * 2))
-        self.solto = False
-        self.usando = False
-        self.sumir = pygame.USEREVENT + 3
-        pygame.time.set_timer(self.sumir, 0)
+    """Sabão/espuma que surge sozinho e gira em volta do alvo até o banho acabar."""
 
-        self.x, self.y = mouse_pos
-        self.x -= 32
-        self.rect = self.image.get_rect()
-        self.rect.topleft = self.x, self.y
+    def __init__(self, alvo: pygame.sprite.Sprite, fase: float = 0.0) -> None:
+        super().__init__()
+        self.alvo = alvo
+        self.fase = fase
+        self.quadros = _carregar_quadros()
+        self.inicio = pygame.time.get_ticks()
+        self.image = self.quadros[0]
+        self.rect = self.image.get_rect(center=alvo.rect.center)
+        self._orbitar(0)
 
-    def update(self):
+    def update(self) -> None:
+        decorrido = pygame.time.get_ticks() - self.inicio
+        if decorrido >= DURACAO_BANHO_MS:
+            self.kill()
+            return
+        self._animar(decorrido)
+        self._orbitar(decorrido)
 
-        if self.solto == False:
-            if pygame.mouse.get_pressed()[0] == True:
-                self.rect.x, self.rect.y = pygame.mouse.get_pos()
-                self.rect.x -= 32
-                if self.usando == True:
-                    self.image = self.sabao_usado[int(self.index_frame_sabao)]
-                    self.index_frame_sabao += 0.1
-                    if self.index_frame_sabao >= len(self.sabao_usado):
-                        self.index_frame_sabao = 0
+    def _animar(self, decorrido: int) -> None:
+        """Mostra a barra e a espuma crescendo; depois alterna os quadros de espuma."""
+        indice = decorrido // DURACAO_QUADRO_MS
+        if indice >= QUADROS_SABAO:
+            espumas = QUADROS_SABAO - PRIMEIRO_QUADRO_ESPUMA
+            indice = PRIMEIRO_QUADRO_ESPUMA + (indice - QUADROS_SABAO) % espumas
+        self.image = self.quadros[indice]
 
-                else:
-                    self.index_frame_sabao = 0
-
-            else:
-                pygame.time.set_timer(self.sumir, 100)
-                self.solto = True
-
-        self.image = pygame.transform.scale(self.image, (64 + 32, 64 + 32))
+    def _orbitar(self, decorrido: int) -> None:
+        angulo = self.fase + 2 * math.pi * VOLTAS_POR_SEGUNDO * decorrido / 1000
+        centro_x, centro_y = self.alvo.rect.center
+        self.rect.center = (
+            centro_x + round(math.cos(angulo) * RAIO_X),
+            centro_y + round(math.sin(angulo) * RAIO_Y),
+        )
