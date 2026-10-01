@@ -40,6 +40,7 @@ class Soap(pygame.sprite.Sprite):
         self._orbitar(0)
 
     def update(self) -> None:
+        """Anima e move a espuma; some quando o banho acaba."""
         decorrido = pygame.time.get_ticks() - self.inicio
         if decorrido >= DURACAO_BANHO_MS:
             self.kill()
@@ -56,6 +57,7 @@ class Soap(pygame.sprite.Sprite):
         self.image = self.quadros[indice]
 
     def _orbitar(self, decorrido: int) -> None:
+        """Posiciona a espuma na elipse em volta do centro do alvo."""
         angulo = self.fase + 2 * math.pi * VOLTAS_POR_SEGUNDO * decorrido / 1000
         centro_x, centro_y = self.alvo.rect.center
         self.rect.center = (

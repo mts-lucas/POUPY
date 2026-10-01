@@ -49,6 +49,7 @@ class Resultado(Enum):
 
 
 def _escalar(imagem: pygame.Surface) -> pygame.Surface:
+    """Amplia a imagem pela escala do menu."""
     largura, altura = imagem.get_size()
     return pygame.transform.scale(imagem, (largura * ESCALA, altura * ESCALA))
 
@@ -70,6 +71,7 @@ class Botao(pygame.sprite.Sprite):
         return self.habilitado and self.rect.collidepoint(pos)
 
     def update(self) -> None:
+        """Escolhe o quadro conforme o botão esteja desabilitado, sob o mouse ou pressionado."""
         if not self.habilitado:
             quadro = QUADRO_DESABILITADO
         elif self.rect.collidepoint(pygame.mouse.get_pos()):
@@ -81,6 +83,7 @@ class Botao(pygame.sprite.Sprite):
 
 
 def _soltou_sobre(evento: pygame.event.Event, botao: Botao) -> bool:
+    """True se o botão esquerdo foi solto sobre o botão (habilitado)."""
     return (
         evento.type == pygame.MOUSEBUTTONUP
         and evento.button == 1
@@ -100,6 +103,7 @@ class TelaMenu:
         self.botoes = pygame.sprite.Group(self.botao)
 
     def tratar_evento(self, evento: pygame.event.Event) -> Optional[Resultado]:
+        """Devolve JOGAR ou CONTINUAR ao clicar no botão ou apertar Enter."""
         if _soltou_sobre(evento, self.botao):
             return Resultado.CONTINUAR if self.tem_save else Resultado.JOGAR
         if evento.type == pygame.KEYDOWN and evento.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
@@ -107,9 +111,11 @@ class TelaMenu:
         return None
 
     def atualizar(self) -> None:
+        """Atualiza o quadro do botão."""
         self.botoes.update()
 
     def desenhar(self, tela: pygame.Surface) -> None:
+        """Desenha o título e o botão."""
         tela.blit(self.titulo, self.titulo_rect)
         self.botoes.draw(tela)
 
@@ -151,6 +157,7 @@ class TelaNome:
         self.botao_confirmar.habilitado = self.valido
 
     def tratar_evento(self, evento: pygame.event.Event) -> Optional[Resultado]:
+        """Recebe texto, teclas e cliques; devolve CONFIRMAR ou VOLTAR quando couber."""
         if evento.type == pygame.TEXTINPUT:
             self._digitar(evento.text)
         elif evento.type == pygame.KEYDOWN:
@@ -162,6 +169,7 @@ class TelaNome:
         return None
 
     def _tratar_tecla(self, tecla: int) -> Optional[Resultado]:
+        """Backspace apaga, Enter confirma (se válido) e Esc volta."""
         if tecla == pygame.K_BACKSPACE:
             self.nome = self.nome[:-1]
             self._atualizar_nome()
@@ -172,15 +180,18 @@ class TelaNome:
         return None
 
     def _digitar(self, texto: str) -> None:
+        """Acrescenta os caracteres imprimíveis, respeitando o limite do nome."""
         for caractere in texto:
             if caractere.isprintable() and len(self.nome) < NOME_MAX:
                 self.nome += caractere
         self._atualizar_nome()
 
     def atualizar(self) -> None:
+        """Atualiza o quadro dos botões."""
         self.botoes.update()
 
     def desenhar(self, tela: pygame.Surface) -> None:
+        """Desenha o painel, o nome digitado e os botões."""
         tela.blit(self.painel, self.painel_rect)
         self._desenhar_texto(tela)
         self.botoes.draw(tela)

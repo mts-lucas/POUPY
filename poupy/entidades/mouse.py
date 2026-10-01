@@ -1,4 +1,5 @@
 import pygame
+
 from poupy.constantes import (
     ESCALA_SPRITE_CURSOR,
     FRAME_CURSOR_CLICADO,
@@ -6,7 +7,6 @@ from poupy.constantes import (
     LADO_SPRITE_CURSOR,
     SPRITE_MOUSE,
 )
-
 
 pygame.init()
 
@@ -35,10 +35,12 @@ class Hand(pygame.sprite.Sprite):
         self._seguir_mouse(mouse_pos)
 
     def _seguir_mouse(self, mouse_pos: tuple[int, int]) -> None:
+        """Posiciona a luva sobre o ponteiro."""
         self.rect.x = mouse_pos[0] - DESLOCAMENTO_X_CURSOR
         self.rect.y = mouse_pos[1]
 
     def update(self) -> None:
+        """Fecha a luva enquanto o botão esquerdo está pressionado e segue o mouse."""
         pressionado = pygame.mouse.get_pressed()[0]
         self.image = self.clicado if pressionado else self.normal
         self._seguir_mouse(pygame.mouse.get_pos())

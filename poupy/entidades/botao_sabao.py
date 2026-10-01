@@ -11,7 +11,9 @@ QUADRO_PRESSIONADO = 3
 POSICAO_BOTAO = (432, 374)
 
 
-class Soap_Button(pygame.sprite.Sprite):
+class SoapButton(pygame.sprite.Sprite):
+    """Botão que inicia o banho."""
+
     def __init__(self) -> None:
         super().__init__()
         quadros = ler_imagens(0, QUADROS_BOTAO, SPRITE_BUT_SABAO, LADO_QUADRO, LADO_QUADRO)

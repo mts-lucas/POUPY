@@ -32,6 +32,8 @@ INTERVALO_DECAIMENTO_MS = 6000
 
 
 class Acao(IntEnum):
+    """Ações (e animações) possíveis do bixinho."""
+
     PARADO = 0
     BAIXO = 1
     ESQUERDA = 2
@@ -61,6 +63,7 @@ class Animacao:
 
 
 class Poupy(pygame.sprite.Sprite):
+    """O bixinho: anda pelo cenário, anima suas ações e guarda fome e limpeza."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -92,6 +95,7 @@ class Poupy(pygame.sprite.Sprite):
 
     @staticmethod
     def _criar_animacoes() -> dict[Acao, Animacao]:
+        """Monta a animação de cada ação a partir das folhas de sprites."""
         def frames(
             inicio: int, fim: int, folha: pygame.Surface, linha: int = 0
         ) -> list[pygame.Surface]:
@@ -133,6 +137,7 @@ class Poupy(pygame.sprite.Sprite):
         }
 
     def update(self) -> None:
+        """Escolhe a ação, anima e recalcula a felicidade."""
         self._escolher_acao()
         self._animar()
         self.feliz = (self.fome + self.limpo) // 2
@@ -211,12 +216,14 @@ class Poupy(pygame.sprite.Sprite):
             self._virar_para_x()
 
     def _virar_para_y(self) -> None:
+        """Vira para cima ou para baixo, rumo ao y do destino."""
         if self.newy > self.rect.y:
             self.update_action(Acao.BAIXO)
         elif self.newy < self.rect.y:
             self.update_action(Acao.CIMA)
 
     def _virar_para_x(self) -> None:
+        """Vira para a esquerda ou para a direita, rumo ao x do destino."""
         if self.newx > self.rect.x:
             self.update_action(Acao.DIREITA)
         elif self.newx < self.rect.x:

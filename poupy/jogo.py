@@ -3,32 +3,22 @@ import os
 import sys
 from enum import Enum, auto
 from random import randint
-from typing import Optional
+from typing import Any, Optional
 
 import pygame
 
-from poupy.constantes import (
-    ALTURA_JANELA,
-    COR_SOMBRA_HUD,
-    COR_TEXTO_HUD,
-    DIRETORIO_SONS,
-    FONTE_NOME_HUD,
-    LARGURA_JANELA,
-    PRETO,
-    RELOGIO_JOGO,
-    SPRITE_BARRA_FELICIDADE,
-    SPRITE_BARRA_FOME,
-    SPRITE_BARRA_LIMPEZA,
-    TELA_FUNDO,
-    existe_save,
-    recuperar_progresso,
-    salvar_progresso,
-)
+from poupy.constantes import (ALTURA_JANELA, COR_SOMBRA_HUD, COR_TEXTO_HUD,
+                              DIRETORIO_SONS, FONTE_NOME_HUD, LARGURA_JANELA,
+                              PRETO, RELOGIO_JOGO, SPRITE_BARRA_FELICIDADE,
+                              SPRITE_BARRA_FOME, SPRITE_BARRA_LIMPEZA,
+                              TELA_FUNDO, existe_save, recuperar_progresso,
+                              salvar_progresso)
 from poupy.entidades.barras import MARCAS_BARRA, Barras
 from poupy.entidades.bixinho import Acao, Poupy
-from poupy.entidades.botao_comida import Alimento_Button
-from poupy.entidades.botao_sabao import Soap_Button
-from poupy.entidades.comida import LADO_FINAL as LADO_COMIDA, Alimento, EstadoComida
+from poupy.entidades.botao_comida import AlimentoButton
+from poupy.entidades.botao_sabao import SoapButton
+from poupy.entidades.comida import LADO_FINAL as LADO_COMIDA
+from poupy.entidades.comida import Alimento, EstadoComida
 from poupy.entidades.mouse import Hand
 from poupy.entidades.sabao import Soap
 from poupy.menu import Resultado, TelaMenu, TelaNome
@@ -119,7 +109,7 @@ class Jogo:
         pygame.mixer.music.load(os.path.join(DIRETORIO_SONS, NOME_MUSICA))
         pygame.mixer.music.play(-1)
 
-    def _iniciar_partida(self, nome: str, progresso: Optional[dict]) -> None:
+    def _iniciar_partida(self, nome: str, progresso: Optional[dict[str, Any]]) -> None:
         """Cria o bixinho, botões, barras e grupos de sprites e começa a jogar."""
         self.nome_bixinho = nome
         self.nome_hud = self._renderizar_nome(nome)
@@ -127,8 +117,8 @@ class Jogo:
         if progresso is not None:
             self.bixinho.fome = progresso["fome"]
             self.bixinho.limpo = progresso["limpeza"]
-        self.botao_comida = Alimento_Button()
-        self.botao_sabao = Soap_Button()
+        self.botao_comida = AlimentoButton()
+        self.botao_sabao = SoapButton()
         self.barra_fome = Barras(
             SPRITE_BARRA_FOME, self.bixinho.fome, STATUS_MAXIMO, *POSICAO_BARRA_FOME
         )
@@ -203,6 +193,7 @@ class Jogo:
             self._iniciar_partida(self.tela_nome.nome.strip(), None)
 
     def _tratar_evento_partida(self, evento: pygame.event.Event) -> None:
+        """Trata timers do bixinho (andar, fome, limpeza) e cliques do mouse."""
         if evento.type == self.bixinho.timer_andar:
             self._sortear_destino()
         elif evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
@@ -274,6 +265,7 @@ class Jogo:
         ]
 
     def _atualizar_sabao(self) -> None:
+        """Mantém o bixinho parado durante o banho e premia a limpeza ao fim."""
         if not self.grupo_sabao:
             if self.bixinho.limpando:
                 # banho acabou: sobe uma marquinha e libera o bixinho para passear
@@ -286,6 +278,7 @@ class Jogo:
         self.bixinho.limpando = True
 
     def _atualizar_comida(self) -> None:
+        """Encerra refeições, descarta carnes sumidas e leva o bixinho à carne escolhida."""
         for carne in [c for c in self.carnes if c.foi_comida]:
             self._terminar_refeicao(carne)
 

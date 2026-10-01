@@ -11,7 +11,9 @@ QUADRO_PRESSIONADO = 3
 POSICAO_BOTAO = (112, 374)
 
 
-class Alimento_Button(pygame.sprite.Sprite):
+class AlimentoButton(pygame.sprite.Sprite):
+    """Botão que faz cair uma carne."""
+
     def __init__(self) -> None:
         super().__init__()
         quadros = ler_imagens(0, QUADROS_BOTAO, SPRITE_BUT_COMIDA, LADO_QUADRO, LADO_QUADRO)

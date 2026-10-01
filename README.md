@@ -83,13 +83,9 @@ POUPY/
 └── LICENSE
 ```
 
-## Próximos passos (refactor)
-
-- Tipar e documentar o restante do código, seguindo a PEP 8.
-
 ## Notas do criador
 
-- Todos os sprites usados neste momento são temporários; os finais serão inseridos ao fim do projeto.
+- Todos os sprites usados neste momento foram gerados via AI apenas para fins de estudo.
 
 ## Créditos
 

@@ -1,7 +1,7 @@
 import json
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 import pygame
 from pygame.locals import *
@@ -9,13 +9,14 @@ from pygame.locals import *
 pygame.init()
 
 
-def salvar_progresso(nome, fome, limpeza):  # func guardar prog em arquivo
+def salvar_progresso(nome: str, fome: float, limpeza: float) -> None:
+    """Grava nome, fome e limpeza do bixinho no arquivo de save."""
     bixinho = {"nome": nome, "fome": fome, "limpeza": limpeza}
     with open(ARQUIVO_SAVE, "w", encoding="utf-8") as arquivo:
         json.dump(bixinho, arquivo)
 
 
-def recuperar_progresso() -> Optional[dict]:  # func ler prog em arquivo
+def recuperar_progresso() -> Optional[dict[str, Any]]:
     """Lê o save; devolve None se não existir ou se estiver inválido."""
     try:
         with open(ARQUIVO_SAVE, "r", encoding="utf-8") as arquivo:
@@ -34,13 +35,22 @@ def existe_save() -> bool:
     return recuperar_progresso() is not None
 
 
-def ler_imagens(primeiro_numero, segundo_numero, sprite, xsprite, ysprite, linha=0):
+def ler_imagens(
+    primeiro_numero: int,
+    segundo_numero: int,
+    sprite: pygame.Surface,
+    xsprite: int,
+    ysprite: int,
+    linha: int = 0,
+) -> list[pygame.Surface]:
+    """Recorta os quadros [primeiro, segundo) de uma linha da folha de sprites."""
     lista_imagens = []
     for i in range(primeiro_numero, segundo_numero):
         img = sprite.subsurface((i * xsprite, linha * ysprite), (xsprite, ysprite))
         lista_imagens.append(img)
 
     return lista_imagens
+
 
 DIRETORIO_PRINCIPAL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIRETORIO_IMAGENS = os.path.join(DIRETORIO_PRINCIPAL, 'assets', 'sprites')
@@ -86,13 +96,11 @@ TAMANHO_FONTE_ENTRADA = 24
 FONTE_NOME_HUD = pygame.font.Font(ARQUIVO_FONTE, TAMANHO_FONTE_HUD)
 FONTE_NOME_ENTRADA = pygame.font.Font(ARQUIVO_FONTE, TAMANHO_FONTE_ENTRADA)
 
-
 LARGURA_JANELA = 640
 ALTURA_JANELA = 480
 RELOGIO_JOGO = pygame.time.Clock()
 
-#core
-
+# cores
 PRETO = (0, 0, 0)
 COR_TEXTO_HUD = (255, 244, 214)
 COR_SOMBRA_HUD = (59, 36, 18)
