@@ -23,7 +23,7 @@ from poupy.entidades.barras import Barras
 from poupy.entidades.bixinho import Acao, Poupy
 from poupy.entidades.botao_comida import Alimento_Button
 from poupy.entidades.botao_sabao import Soap_Button
-from poupy.entidades.comida import Alimento
+from poupy.entidades.comida import LADO_FINAL as LADO_COMIDA, Alimento
 from poupy.entidades.mouse import Hand
 from poupy.entidades.sabao import Soap
 
@@ -33,7 +33,6 @@ BRANCO = (255, 255, 255)
 NOME_MUSICA = "BoxCat Games - Young Love.mp3"
 
 # eventos de timer das sprites que somem
-EVENTO_COMIDA_SUMIR = pygame.USEREVENT + 2
 EVENTO_SABAO_SUMIR = pygame.USEREVENT + 3
 
 # limites e passos dos atributos do bixinho
@@ -41,7 +40,6 @@ STATUS_MAXIMO = 150
 PASSO_DECAIMENTO = 5
 GANHO_COMIDA = 10
 GANHO_SABAO = 0.5
-TEMPO_SUMIR_COMIDA_MS = 8000
 
 # area onde o bixinho caminha
 ANDAR_X_MAX = 520
@@ -51,6 +49,12 @@ ANDAR_Y_MAX = 350
 # deslocamento para o bixinho parar ao lado da comida
 OFFSET_COMIDA_X = 64
 OFFSET_COMIDA_Y = 66
+
+# onde a carne pode pousar (centro em x, topo em y), alcançável pelo bixinho
+CARNE_X_MIN = OFFSET_COMIDA_X + LADO_COMIDA // 2
+CARNE_X_MAX = ANDAR_X_MAX + OFFSET_COMIDA_X + LADO_COMIDA // 2
+CARNE_Y_MIN = ANDAR_Y_MIN + OFFSET_COMIDA_Y
+CARNE_Y_MAX = ANDAR_Y_MAX + OFFSET_COMIDA_Y
 
 
 class Jogo:
@@ -117,8 +121,6 @@ class Jogo:
                 self._sortear_destino()
             elif evento.type == pygame.MOUSEBUTTONDOWN and evento.button == 1:
                 self._tratar_clique(mouse_pos)
-            elif evento.type == EVENTO_COMIDA_SUMIR:
-                self._remover_comida()
             elif evento.type == EVENTO_SABAO_SUMIR:
                 self._remover_sabao()
             elif evento.type == self.bixinho.descer_fome:
@@ -137,9 +139,11 @@ class Jogo:
             self.bixinho.newy = randint(ANDAR_Y_MIN, ANDAR_Y_MAX)
 
     def _tratar_clique(self, mouse_pos: tuple[int, int]) -> None:
-        """Cria comida ou sabão quando o botão correspondente é clicado."""
+        """Faz cair uma carne ou cria sabão quando o botão correspondente é clicado."""
         if self.botao_comida.rect.collidepoint(mouse_pos) and self.maca is None:
-            self.maca = Alimento(mouse_pos)
+            self.maca = Alimento(
+                randint(CARNE_X_MIN, CARNE_X_MAX), randint(CARNE_Y_MIN, CARNE_Y_MAX)
+            )
             self.todas_as_sprites.add(self.maca)
             self.grupo_comida.add(self.maca)
 
@@ -147,13 +151,6 @@ class Jogo:
             self.sabao = Soap(mouse_pos)
             self.todas_as_sprites.add(self.sabao)
             self.grupo_sabao.add(self.sabao)
-
-    def _remover_comida(self) -> None:
-        if self.maca is None:
-            return
-        pygame.time.set_timer(self.maca.sumir, 0)
-        self.maca.kill()
-        self.maca = None
 
     def _remover_sabao(self) -> None:
         if self.sabao is None:
@@ -173,18 +170,34 @@ class Jogo:
 
     def _atualizar_sabao(self) -> None:
         if self.sabao is None:
+            self.bixinho.limpando = False
             return
 
         colisoes = pygame.sprite.spritecollide(
             self.bixinho, self.grupo_sabao, False, pygame.sprite.collide_mask
         )
         self.sabao.usando = bool(colisoes)
+        self.bixinho.limpando = bool(colisoes)
         if colisoes:
             self.bixinho.limpo = min(STATUS_MAXIMO, self.bixinho.limpo + GANHO_SABAO)
             self.barra_limpo.subir_barra(self.bixinho.limpo)
 
     def _atualizar_comida(self) -> None:
-        if self.maca is None or not self.maca.comida_no_chao:
+        if self.maca is None:
+            return
+
+        if not self.maca.alive():
+            # a carne/osso sumiu (puft): libera o bixinho para passear
+            self.maca = None
+            self.bixinho.comendo = False
+            self.continua_andando = True
+            return
+
+        if self.maca.foi_comida:
+            self._terminar_refeicao()
+            return
+
+        if not self.maca.comida_no_chao:
             return
 
         self.continua_andando = False
@@ -200,13 +213,14 @@ class Jogo:
             self.bixinho.comendo = True
             self.maca.sendo_comido()
 
-        if self.maca.foi_comida:
+    def _terminar_refeicao(self) -> None:
+        """Alimenta o bixinho uma única vez quando a carne vira osso."""
+        self.bixinho.comendo = False
+        self.continua_andando = True
+        if self.maca in self.grupo_comida:
             self.bixinho.fome = min(STATUS_MAXIMO, self.bixinho.fome + GANHO_COMIDA)
             self.barra_fome.subir_barra(self.bixinho.fome)
-            pygame.time.set_timer(self.maca.sumir, TEMPO_SUMIR_COMIDA_MS)
-            self.bixinho.comendo = False
-            self.continua_andando = True
-            # evita alimentar de novo enquanto a maçã espera sumir
+            # o osso fica na tela mas não alimenta de novo
             self.grupo_comida.remove(self.maca)
 
     def _atualizar_carinho(self) -> None:

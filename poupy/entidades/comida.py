@@ -1,83 +1,115 @@
-import pygame
-from pygame.locals import *
-from poupy.constantes import ler_imagens, SPRITE_COMIDA
+from enum import IntEnum
 
-pygame.init()
+import pygame
+
+from poupy.constantes import (
+    SPRITE_CARNE_PUFT,
+    SPRITE_COMIDA,
+    SPRITE_OSSO_PUFT,
+    ler_imagens,
+)
+
+LADO_QUADRO = 24
+ESCALA = 2
+LADO_FINAL = LADO_QUADRO * ESCALA
+QUADROS_COMIDA = 6
+QUADROS_PUFT = 7
+
+VELOCIDADE_QUEDA = 5
+DURACAO_COMER_MS = 4000
+DURACAO_PUFT_MS = 500
+TEMPO_CARNE_SUMIR_MS = 10000
+TEMPO_OSSO_SUMIR_MS = 5000
+
+
+class EstadoComida(IntEnum):
+    CAINDO = 0
+    NO_CHAO = 1
+    SENDO_COMIDA = 2
+    OSSO = 3
+    PUFT = 4
+
+
+def _carregar_quadros(folha: pygame.Surface, quantidade: int) -> list[pygame.Surface]:
+    """Recorta os quadros da folha e já os escala para o tamanho de jogo."""
+    quadros = ler_imagens(0, quantidade, folha, LADO_QUADRO, LADO_QUADRO)
+    return [pygame.transform.scale(q, (LADO_FINAL, LADO_FINAL)) for q in quadros]
+
 
 class Alimento(pygame.sprite.Sprite):
+    """Carne que cai do alto, é comida, vira osso e some com um puft."""
 
-    def __init__(self, mouse_pos):
-        pygame.sprite.Sprite.__init__(self)
-        self.comida_parada = SPRITE_COMIDA.subsurface((0, 0), (32, 32))
-        self.sendo_comida = ler_imagens(0, 5, SPRITE_COMIDA, 32, 32)
-        self.index_frame_maca = 0
-        self.image = self.comida_parada
-        self.image = pygame.transform.scale(self.image, (32 * 2, 32 * 2))
-        self.start_comer = False
-        self.caindo = False
-        self.comida_no_chao = False
+    def __init__(self, x: int, y_chao: int) -> None:
+        super().__init__()
+        self.quadros_comida = _carregar_quadros(SPRITE_COMIDA, QUADROS_COMIDA)
+        self.quadros_puft_carne = _carregar_quadros(SPRITE_CARNE_PUFT, QUADROS_PUFT)
+        self.quadros_puft_osso = _carregar_quadros(SPRITE_OSSO_PUFT, QUADROS_PUFT)
+        self.quadros_puft = self.quadros_puft_carne
+
+        self.estado = EstadoComida.CAINDO
+        self.y_chao = y_chao
+        self.inicio_estado = pygame.time.get_ticks()
         self.foi_comida = False
-        self.solto = False
-        self.y_solto = None
-        self.y_chao = None
-        self.sumir = pygame.USEREVENT + 2
-        pygame.time.set_timer(self.sumir, 0)
-        self.x, self.y = mouse_pos
-        self.rect = self.image.get_rect()
-        self.rect.topleft = self.x, self.y
 
-    def sendo_comido(self):
-        self.start_comer = True
+        self._definir_imagem(self.quadros_comida[0])
+        self.rect = self.image.get_rect(midtop=(x, -LADO_FINAL))
 
-    def cair(self):
-        self.caindo = True
+    @property
+    def comida_no_chao(self) -> bool:
+        """True quando a carne já pousou e ainda pode ser comida."""
+        return self.estado in (EstadoComida.NO_CHAO, EstadoComida.SENDO_COMIDA)
 
-    def update(self):
+    def sendo_comido(self) -> None:
+        """Inicia a mastigação, se a carne estiver parada no chão."""
+        if self.estado == EstadoComida.NO_CHAO:
+            self._mudar_estado(EstadoComida.SENDO_COMIDA)
 
-        # if self.foi_comida == True:
-        #     pygame.time.set_timer(self.sumir, 5000)
+    def update(self) -> None:
+        agora = pygame.time.get_ticks()
+        decorrido = agora - self.inicio_estado
 
-        if self.start_comer == True and self.foi_comida == False:
-            self.image = self.sendo_comida[int(self.index_frame_maca)]
-            self.index_frame_maca += 0.005
-            if self.index_frame_maca >= len(self.sendo_comida):
-                self.index_frame_maca = 5
-                self.foi_comida = True
+        if self.estado == EstadoComida.CAINDO:
+            self._cair()
+        elif self.estado == EstadoComida.NO_CHAO:
+            if decorrido >= TEMPO_CARNE_SUMIR_MS:
+                self._iniciar_puft(self.quadros_puft_carne)
+        elif self.estado == EstadoComida.SENDO_COMIDA:
+            self._mastigar(decorrido)
+        elif self.estado == EstadoComida.OSSO:
+            if decorrido >= TEMPO_OSSO_SUMIR_MS:
+                self._iniciar_puft(self.quadros_puft_osso)
+        elif self.estado == EstadoComida.PUFT:
+            self._animar_puft(decorrido)
 
-        if self.caindo == True:
-            if self.y_solto >= 300:
-                self.comida_no_chao = True
-                self.caindo = False
-            else:
-                self.rect.y += 5
+    def _cair(self) -> None:
+        self.rect.y += VELOCIDADE_QUEDA
+        if self.rect.y >= self.y_chao:
+            self.rect.y = self.y_chao
+            self._mudar_estado(EstadoComida.NO_CHAO)
 
-                if self.y_solto >= 200 and self.y_solto < 300:
-                    self.y_chao = 380
-                    if self.rect.y >= self.y_chao:
-                        self.comida_no_chao = True
-                        # pygame.time.set_timer(self.sumir, 5000)
-                        self.caindo = False
+    def _mastigar(self, decorrido: int) -> None:
+        progresso = min(decorrido / DURACAO_COMER_MS, 1)
+        indice = min(int(progresso * QUADROS_COMIDA), QUADROS_COMIDA - 1)
+        self._definir_imagem(self.quadros_comida[indice])
+        if progresso >= 1:
+            self.foi_comida = True
+            self._mudar_estado(EstadoComida.OSSO)
 
-                if self.y_solto >= 100 and self.y_solto < 200:
-                    self.y_chao = 330
-                    if self.rect.y >= self.y_chao:
-                        self.comida_no_chao = True
-                        # pygame.time.set_timer(self.sumir, 5000)
-                        self.caindo = False
-                if self.y_solto >= 0 and self.y_solto < 100:
-                    self.y_chao = 290
-                    if self.rect.y >= self.y_chao:
-                        self.comida_no_chao = True
-                        # pygame.time.set_timer(self.sumir, 5000)
-                        self.caindo = False
+    def _iniciar_puft(self, quadros: list[pygame.Surface]) -> None:
+        self.quadros_puft = quadros
+        self._mudar_estado(EstadoComida.PUFT)
 
-        if self.solto == False:
-            if pygame.mouse.get_pressed()[0] == True:
-                self.rect.x, self.rect.y = pygame.mouse.get_pos()
+    def _animar_puft(self, decorrido: int) -> None:
+        if decorrido >= DURACAO_PUFT_MS:
+            self.kill()
+            return
+        indice = decorrido * len(self.quadros_puft) // DURACAO_PUFT_MS
+        self._definir_imagem(self.quadros_puft[indice])
 
-            else:
-                self.y_solto = self.rect.y
-                self.cair()
-                self.solto = True
+    def _mudar_estado(self, estado: EstadoComida) -> None:
+        self.estado = estado
+        self.inicio_estado = pygame.time.get_ticks()
 
-        self.image = pygame.transform.scale(self.image, (32 * 2, 32 * 2))
+    def _definir_imagem(self, imagem: pygame.Surface) -> None:
+        self.image = imagem
+        self.mask = pygame.mask.from_surface(imagem)

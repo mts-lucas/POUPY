@@ -28,10 +28,10 @@ def recuperar_progresso(fome, limpeza): # func ler prog em arquivo
     
     return bixinho
 
-def ler_imagens(primeiro_numero, segundo_numero, sprite, xsprite, ysprite):
+def ler_imagens(primeiro_numero, segundo_numero, sprite, xsprite, ysprite, linha=0):
     lista_imagens = []
     for i in range(primeiro_numero, segundo_numero):
-        img = sprite.subsurface((i * xsprite, 0), (xsprite, ysprite))
+        img = sprite.subsurface((i * xsprite, linha * ysprite), (xsprite, ysprite))
         lista_imagens.append(img)
 
     return lista_imagens
@@ -48,14 +48,20 @@ def add_sprites_grupo(*sprites):
 DIRETORIO_PRINCIPAL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIRETORIO_IMAGENS = os.path.join(DIRETORIO_PRINCIPAL, 'assets', 'sprites')
 DIRETORIO_SONS = os.path.join(DIRETORIO_PRINCIPAL, 'assets', 'musica')
-SPRITE_SHEET = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'link_sprites.png'))
-SPRITE_COMIDA = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'apple.png'))
-SPRITE_BUT_COMIDA = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'apple_button.png'))
+LADO_SPRITE_COBRA = 32
+ESCALA_SPRITE_COBRA = 4
+SPRITE_COBRA_IDLE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_idle_32x32.png'))
+SPRITE_COBRA_WALK = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_walk_32x32.png'))
+SPRITE_COBRA_EAT = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_eat_32x32.png'))
+SPRITE_COBRA_PET = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_pet_32x32.png'))
+SPRITE_COBRA_SCRUB = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_scrub_32x32.png'))
+SPRITE_COMIDA = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'carne_mastigada_24x24.png'))
+SPRITE_CARNE_PUFT = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'carne_puft_168x24.png'))
+SPRITE_OSSO_PUFT = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'osso_puft_168x24.png'))
+SPRITE_BUT_COMIDA = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'botao_carne_32x32.png'))
 SPRITE_BUT_SABAO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'botao_sabao.png'))
 SPRITE_SABAO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'sabao_sprites.png'))
 SPRITE_MOUSE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'mouse_sprites.png'))
-SPRITE_AFAGADO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'link_sprites_afago.png'))
-SPRITE_COMENDO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'link_sprites_comendo.png'))
 SPRITES_BARRAS = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_vida.png'))
 TELA_FUNDO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'telafundo.png'))
 

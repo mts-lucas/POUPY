@@ -3,10 +3,18 @@ from enum import IntEnum
 
 import pygame
 
-from poupy.constantes import ler_imagens, SPRITE_SHEET, SPRITE_AFAGADO, SPRITE_COMENDO
+from poupy.constantes import (
+    ESCALA_SPRITE_COBRA,
+    LADO_SPRITE_COBRA,
+    SPRITE_COBRA_EAT,
+    SPRITE_COBRA_IDLE,
+    SPRITE_COBRA_PET,
+    SPRITE_COBRA_SCRUB,
+    SPRITE_COBRA_WALK,
+    ler_imagens,
+)
 
-LARGURA_SPRITE = 120
-ALTURA_SPRITE = 130
+LADO_SPRITE = LADO_SPRITE_COBRA * ESCALA_SPRITE_COBRA
 PASSO_PIXELS = 2
 POSICAO_INICIAL = (300, 300)
 
@@ -26,6 +34,7 @@ class Acao(IntEnum):
     DIREITA = 4
     AFAGO = 5
     COMER = 6
+    LIMPAR = 7
 
 
 @dataclass(frozen=True)
@@ -53,6 +62,7 @@ class Poupy(pygame.sprite.Sprite):
         # destino do passeio e variáveis de controle
         self.newx, self.newy = POSICAO_INICIAL
         self.comendo = False
+        self.limpando = False
 
         # parâmetros de vida
         self.fome = STATUS_INICIAL
@@ -68,26 +78,35 @@ class Poupy(pygame.sprite.Sprite):
 
     @staticmethod
     def _criar_animacoes() -> dict[Acao, Animacao]:
-        def frames(inicio: int, fim: int, folha: pygame.Surface) -> list[pygame.Surface]:
-            return ler_imagens(inicio, fim, folha, LARGURA_SPRITE, ALTURA_SPRITE)
+        def frames(
+            inicio: int, fim: int, folha: pygame.Surface, linha: int = 0
+        ) -> list[pygame.Surface]:
+            quadros = ler_imagens(
+                inicio, fim, folha, LADO_SPRITE_COBRA, LADO_SPRITE_COBRA, linha
+            )
+            return [
+                pygame.transform.scale(quadro, (LADO_SPRITE, LADO_SPRITE))
+                for quadro in quadros
+            ]
 
         return {
-            Acao.PARADO: Animacao(frames(0, 3, SPRITE_SHEET), 0.05),
+            Acao.PARADO: Animacao(frames(0, 6, SPRITE_COBRA_IDLE), 0.1),
             Acao.BAIXO: Animacao(
-                frames(3, 13, SPRITE_SHEET), 0.2, dy=PASSO_PIXELS, volta_ao_parado=True
+                frames(0, 4, SPRITE_COBRA_WALK, 0), 0.1, dy=PASSO_PIXELS, volta_ao_parado=True
             ),
             Acao.ESQUERDA: Animacao(
-                frames(13, 23, SPRITE_SHEET), 0.2,
+                frames(0, 4, SPRITE_COBRA_WALK, 1), 0.1,
                 dx=-PASSO_PIXELS, segue_y=True, volta_ao_parado=True,
             ),
             Acao.CIMA: Animacao(
-                frames(23, 33, SPRITE_SHEET), 0.5, dy=-PASSO_PIXELS, volta_ao_parado=True
+                frames(0, 4, SPRITE_COBRA_WALK, 3), 0.2, dy=-PASSO_PIXELS, volta_ao_parado=True
             ),
             Acao.DIREITA: Animacao(
-                frames(33, 43, SPRITE_SHEET), 0.2, dx=PASSO_PIXELS, segue_y=True
+                frames(0, 4, SPRITE_COBRA_WALK, 2), 0.1, dx=PASSO_PIXELS, segue_y=True
             ),
-            Acao.AFAGO: Animacao(frames(0, 3, SPRITE_AFAGADO), 0.05, volta_ao_parado=True),
-            Acao.COMER: Animacao(frames(0, 3, SPRITE_COMENDO), 0.05),
+            Acao.AFAGO: Animacao(frames(0, 8, SPRITE_COBRA_PET), 0.1, volta_ao_parado=True),
+            Acao.COMER: Animacao(frames(0, 8, SPRITE_COBRA_EAT), 0.1),
+            Acao.LIMPAR: Animacao(frames(0, 8, SPRITE_COBRA_SCRUB), 0.15),
         }
 
     def update(self) -> None:
@@ -118,7 +137,15 @@ class Poupy(pygame.sprite.Sprite):
 
         chegou = self.newx == self.rect.x and self.newy == self.rect.y
         if chegou and not self.mouse_colidindo():
-            self.update_action(Acao.COMER if self.comendo else Acao.PARADO)
+            self.update_action(self._acao_no_destino())
+
+    def _acao_no_destino(self) -> Acao:
+        """Ação de quem já chegou ao destino: comer, tomar banho ou ficar parado."""
+        if self.comendo:
+            return Acao.COMER
+        if self.limpando:
+            return Acao.LIMPAR
+        return Acao.PARADO
 
     def _andar_em_x(self) -> None:
         """Anda na horizontal; ao alinhar o x, segue na vertical."""
