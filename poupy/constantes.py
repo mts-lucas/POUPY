@@ -61,7 +61,11 @@ SPRITE_OSSO_PUFT = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'osso_puft_
 SPRITE_BUT_COMIDA = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'botao_carne_32x32.png'))
 SPRITE_BUT_SABAO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'botao_sabao_32x32.png'))
 SPRITE_SABAO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'espuma_sabao_24x24.png'))
-SPRITE_MOUSE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'mouse_sprites.png'))
+LADO_SPRITE_CURSOR = 24
+ESCALA_SPRITE_CURSOR = 2
+FRAME_CURSOR_NORMAL = 0
+FRAME_CURSOR_CLICADO = 4
+SPRITE_MOUSE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'luva_cursor_120x24.png'))
 SPRITES_BARRAS = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_vida.png'))
 TELA_FUNDO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'telafundo.png'))
 
