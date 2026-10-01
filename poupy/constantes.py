@@ -55,6 +55,9 @@ SPRITE_COBRA_WALK = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_
 SPRITE_COBRA_EAT = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_eat_32x32.png'))
 SPRITE_COBRA_PET = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_pet_32x32.png'))
 SPRITE_COBRA_SCRUB = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_scrub_32x32.png'))
+SPRITE_COBRA_HUNGRY = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_hungry_32x32.png'))
+SPRITE_COBRA_DIRTY = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_dirty_32x32.png'))
+SPRITE_COBRA_SAD = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'cobrinha_sad_32x32.png'))
 SPRITE_COMIDA = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'carne_mastigada_24x24.png'))
 SPRITE_CARNE_PUFT = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'carne_puft_168x24.png'))
 SPRITE_OSSO_PUFT = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'osso_puft_168x24.png'))
@@ -66,7 +69,9 @@ ESCALA_SPRITE_CURSOR = 2
 FRAME_CURSOR_NORMAL = 0
 FRAME_CURSOR_CLICADO = 4
 SPRITE_MOUSE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'luva_cursor_120x24.png'))
-SPRITES_BARRAS = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_vida.png'))
+SPRITE_BARRA_FOME = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_fome_504x12.png'))
+SPRITE_BARRA_LIMPEZA = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_limpeza_504x12.png'))
+SPRITE_BARRA_FELICIDADE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_felicidade_504x12.png'))
 TELA_FUNDO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'telafundo.png'))
 
 

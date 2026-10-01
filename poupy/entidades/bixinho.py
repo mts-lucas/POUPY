@@ -1,14 +1,18 @@
 from dataclasses import dataclass
 from enum import IntEnum
+from random import choice
 
 import pygame
 
 from poupy.constantes import (
     ESCALA_SPRITE_COBRA,
     LADO_SPRITE_COBRA,
+    SPRITE_COBRA_DIRTY,
     SPRITE_COBRA_EAT,
+    SPRITE_COBRA_HUNGRY,
     SPRITE_COBRA_IDLE,
     SPRITE_COBRA_PET,
+    SPRITE_COBRA_SAD,
     SPRITE_COBRA_SCRUB,
     SPRITE_COBRA_WALK,
     ler_imagens,
@@ -35,6 +39,13 @@ class Acao(IntEnum):
     AFAGO = 5
     COMER = 6
     LIMPAR = 7
+    FOME = 8
+    SUJO = 9
+    TRISTE = 10
+
+
+# ações que substituem o idle quando o bixinho tem alguma carência
+ACOES_CARENCIA = (Acao.FOME, Acao.SUJO, Acao.TRISTE)
 
 
 @dataclass(frozen=True)
@@ -63,6 +74,7 @@ class Poupy(pygame.sprite.Sprite):
         self.newx, self.newy = POSICAO_INICIAL
         self.comendo = False
         self.limpando = False
+        self.carencias: list[Acao] = []  # preenchida por Jogo a cada frame
 
         # parâmetros de vida
         self.fome = STATUS_INICIAL
@@ -107,6 +119,15 @@ class Poupy(pygame.sprite.Sprite):
             Acao.AFAGO: Animacao(frames(0, 8, SPRITE_COBRA_PET), 0.1, volta_ao_parado=True),
             Acao.COMER: Animacao(frames(0, 8, SPRITE_COBRA_EAT), 0.1),
             Acao.LIMPAR: Animacao(frames(0, 8, SPRITE_COBRA_SCRUB), 0.15),
+            Acao.FOME: Animacao(
+                frames(0, 8, SPRITE_COBRA_HUNGRY), 0.1, volta_ao_parado=True
+            ),
+            Acao.SUJO: Animacao(
+                frames(0, 8, SPRITE_COBRA_DIRTY), 0.1, volta_ao_parado=True
+            ),
+            Acao.TRISTE: Animacao(
+                frames(0, 8, SPRITE_COBRA_SAD), 0.1, volta_ao_parado=True
+            ),
         }
 
     def update(self) -> None:
@@ -131,6 +152,9 @@ class Poupy(pygame.sprite.Sprite):
 
     def _escolher_acao(self) -> None:
         """Decide a ação a partir da posição atual e do destino."""
+        if self.action in ACOES_CARENCIA and not (self.comendo or self.limpando):
+            return  # deixa a animação de carência terminar
+
         if self.newx != self.rect.x:
             self._andar_em_x()
             self._andar_em_y()
@@ -140,11 +164,13 @@ class Poupy(pygame.sprite.Sprite):
             self.update_action(self._acao_no_destino())
 
     def _acao_no_destino(self) -> Acao:
-        """Ação de quem já chegou ao destino: comer, tomar banho ou ficar parado."""
+        """Ação de quem já chegou ao destino: comer, tomar banho, mostrar uma carência ou ficar parado."""
         if self.comendo:
             return Acao.COMER
         if self.limpando:
             return Acao.LIMPAR
+        if self.carencias:
+            return choice(self.carencias)
         return Acao.PARADO
 
     def _andar_em_x(self) -> None:

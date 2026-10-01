@@ -15,12 +15,15 @@ from poupy.constantes import (
     POSICAO_RELOGIO,
     PRETO,
     RELOGIO_JOGO,
+    SPRITE_BARRA_FELICIDADE,
+    SPRITE_BARRA_FOME,
+    SPRITE_BARRA_LIMPEZA,
     TELA_FUNDO,
     add_sprites_grupo,
     recuperar_progresso,
     salvar_progresso,
 )
-from poupy.entidades.barras import Barras
+from poupy.entidades.barras import MARCAS_BARRA, Barras
 from poupy.entidades.bixinho import Acao, Poupy
 from poupy.entidades.botao_comida import Alimento_Button
 from poupy.entidades.botao_sabao import Soap_Button
@@ -37,8 +40,13 @@ NOME_MUSICA = "BoxCat Games - Young Love.mp3"
 STATUS_MAXIMO = 150
 PASSO_DECAIMENTO = 5
 GANHO_COMIDA = 10
-GANHO_SABAO = 0.5
+GANHO_BANHO = STATUS_MAXIMO / MARCAS_BARRA  # um banho sobe uma marquinha
 QTD_ESPUMAS = 1
+
+# posição das barras de status
+POSICAO_BARRA_FOME = (30, 20)
+POSICAO_BARRA_LIMPEZA = (30, 60)
+POSICAO_BARRA_FELICIDADE = (30, 100)
 
 # area onde o bixinho caminha
 ANDAR_X_MAX = 520
@@ -86,9 +94,18 @@ class Jogo:
         )
         self.botao_comida = Alimento_Button()
         self.botao_sabao = Soap_Button()
-        self.barra_fome = Barras(self.bixinho.fome, 30, 20)
-        self.barra_limpo = Barras(self.bixinho.limpo, 30, 45)
-        self.barra_felicidade = Barras(self.bixinho.feliz, 30, 70)
+        self.barra_fome = Barras(
+            SPRITE_BARRA_FOME, self.bixinho.fome, STATUS_MAXIMO, *POSICAO_BARRA_FOME
+        )
+        self.barra_limpo = Barras(
+            SPRITE_BARRA_LIMPEZA, self.bixinho.limpo, STATUS_MAXIMO, *POSICAO_BARRA_LIMPEZA
+        )
+        self.barra_felicidade = Barras(
+            SPRITE_BARRA_FELICIDADE,
+            self.bixinho.feliz,
+            STATUS_MAXIMO,
+            *POSICAO_BARRA_FELICIDADE,
+        )
         self.mouse = Hand(pygame.mouse.get_pos())
 
         self.todas_as_sprites = add_sprites_grupo(
@@ -121,12 +138,8 @@ class Jogo:
                 self._tratar_clique(mouse_pos)
             elif evento.type == self.bixinho.descer_fome:
                 self.bixinho.fome = max(0, self.bixinho.fome - PASSO_DECAIMENTO)
-                self.barra_fome.descer_barra(self.bixinho.fome)
-                self.barra_felicidade.descer_barra(self.bixinho.feliz)
             elif evento.type == self.bixinho.descer_limpeza:
                 self.bixinho.limpo = max(0, self.bixinho.limpo - PASSO_DECAIMENTO)
-                self.barra_limpo.descer_barra(self.bixinho.limpo)
-                self.barra_felicidade.descer_barra(self.bixinho.feliz)
 
     def _sortear_destino(self) -> None:
         """Sorteia um novo ponto para o bixinho andar."""
@@ -164,19 +177,34 @@ class Jogo:
         self._atualizar_comida()
         self._atualizar_carinho()
         self.todas_as_sprites.update()
+        self._atualizar_barras()
+
+    def _atualizar_barras(self) -> None:
+        """Ajusta o quadro de cada barra ao valor atual do bixinho."""
+        self.barra_fome.atualizar(self.bixinho.fome)
+        self.barra_limpo.atualizar(self.bixinho.limpo)
+        self.barra_felicidade.atualizar(self.bixinho.feliz)
+        self.bixinho.carencias = [
+            acao
+            for barra, acao in (
+                (self.barra_fome, Acao.FOME),
+                (self.barra_limpo, Acao.SUJO),
+                (self.barra_felicidade, Acao.TRISTE),
+            )
+            if barra.precisa_atencao
+        ]
 
     def _atualizar_sabao(self) -> None:
         if not self.grupo_sabao:
             if self.bixinho.limpando:
-                # banho acabou: libera o bixinho para passear
+                # banho acabou: sobe uma marquinha e libera o bixinho para passear
                 self.bixinho.limpando = False
                 self.continua_andando = True
+                self.bixinho.limpo = min(STATUS_MAXIMO, self.bixinho.limpo + GANHO_BANHO)
             return
 
         self.continua_andando = False
         self.bixinho.limpando = True
-        self.bixinho.limpo = min(STATUS_MAXIMO, self.bixinho.limpo + GANHO_SABAO)
-        self.barra_limpo.subir_barra(self.bixinho.limpo)
 
     def _atualizar_comida(self) -> None:
         if self.maca is None:
@@ -193,7 +221,8 @@ class Jogo:
             self._terminar_refeicao()
             return
 
-        if not self.maca.comida_no_chao:
+        if not self.maca.comida_no_chao or not self._tem_fome():
+            # sem fome, o bixinho não tem interesse na carne
             return
 
         self.continua_andando = False
@@ -209,13 +238,16 @@ class Jogo:
             self.bixinho.comendo = True
             self.maca.sendo_comido()
 
+    def _tem_fome(self) -> bool:
+        """O bixinho só se interessa pela carne se a barra de fome não estiver cheia."""
+        return not self.barra_fome.cheia
+
     def _terminar_refeicao(self) -> None:
         """Alimenta o bixinho uma única vez quando a carne vira osso."""
         self.bixinho.comendo = False
         self.continua_andando = True
         if self.maca in self.grupo_comida:
             self.bixinho.fome = min(STATUS_MAXIMO, self.bixinho.fome + GANHO_COMIDA)
-            self.barra_fome.subir_barra(self.bixinho.fome)
             # o osso fica na tela mas não alimenta de novo
             self.grupo_comida.remove(self.maca)
 
