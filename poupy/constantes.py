@@ -36,15 +36,6 @@ def ler_imagens(primeiro_numero, segundo_numero, sprite, xsprite, ysprite, linha
 
     return lista_imagens
 
-def add_sprites_grupo(*sprites):
-    spritegroup = pygame.sprite.Group() 
-    for sprite in sprites:
-        spritegroup.add(sprite)
-
-    return spritegroup
-
-
-
 DIRETORIO_PRINCIPAL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIRETORIO_IMAGENS = os.path.join(DIRETORIO_PRINCIPAL, 'assets', 'sprites')
 DIRETORIO_SONS = os.path.join(DIRETORIO_PRINCIPAL, 'assets', 'musica')
@@ -72,18 +63,13 @@ SPRITE_MOUSE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'luva_cursor_12
 SPRITE_BARRA_FOME = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_fome_504x12.png'))
 SPRITE_BARRA_LIMPEZA = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_limpeza_504x12.png'))
 SPRITE_BARRA_FELICIDADE = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'barra_felicidade_504x12.png'))
-TELA_FUNDO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'telafundo.png'))
+TELA_FUNDO = pygame.image.load(os.path.join(DIRETORIO_IMAGENS, 'fundo_jardim_1920x1080.png'))
 
 
 LARGURA_JANELA = 640
 ALTURA_JANELA = 480
-POSICAO_RELOGIO = (500, 10)
 RELOGIO_JOGO = pygame.time.Clock()
 
 #core
 
 PRETO = (0, 0, 0)
-
-#Fontes
-
-FONTE_CS = pygame.font.SysFont("comicsansms", 40, True, True)

@@ -1,7 +1,6 @@
 import math
 import os
 import sys
-from datetime import datetime
 from random import randint
 from typing import Optional
 
@@ -10,16 +9,13 @@ import pygame
 from poupy.constantes import (
     ALTURA_JANELA,
     DIRETORIO_SONS,
-    FONTE_CS,
     LARGURA_JANELA,
-    POSICAO_RELOGIO,
     PRETO,
     RELOGIO_JOGO,
     SPRITE_BARRA_FELICIDADE,
     SPRITE_BARRA_FOME,
     SPRITE_BARRA_LIMPEZA,
     TELA_FUNDO,
-    add_sprites_grupo,
     recuperar_progresso,
     salvar_progresso,
 )
@@ -33,7 +29,6 @@ from poupy.entidades.sabao import Soap
 
 FPS = 60
 VOLUME_MUSICA = 0.50
-BRANCO = (255, 255, 255)
 NOME_MUSICA = "BoxCat Games - Young Love.mp3"
 
 # limites e passos dos atributos do bixinho
@@ -42,6 +37,11 @@ PASSO_DECAIMENTO = 5
 GANHO_COMIDA = 10
 GANHO_BANHO = STATUS_MAXIMO / MARCAS_BARRA  # um banho sobe uma marquinha
 QTD_ESPUMAS = 1
+
+# camadas de desenho (maior fica na frente)
+CAMADA_MUNDO = 0
+CAMADA_INTERFACE = 1
+CAMADA_MOUSE = 2
 
 # posição das barras de status
 POSICAO_BARRA_FOME = (30, 20)
@@ -72,13 +72,22 @@ class Jogo:
         self.tela = pygame.display.set_mode((LARGURA_JANELA, ALTURA_JANELA))
         pygame.display.set_caption("Poupy")
         pygame.mouse.set_visible(False)
-        self.fundo = pygame.transform.scale(TELA_FUNDO, (LARGURA_JANELA, ALTURA_JANELA))
+        self.fundo = self._preparar_fundo()
         self.relogio = RELOGIO_JOGO
         self.rodando = True
         self.continua_andando = True
 
         self._iniciar_musica()
         self._criar_objetos()
+
+    def _preparar_fundo(self) -> pygame.Surface:
+        """Escala o fundo até a altura da janela e recorta o centro, sem distorcer."""
+        largura, altura = TELA_FUNDO.get_size()
+        largura_escalada = largura * ALTURA_JANELA // altura
+        escalado = pygame.transform.smoothscale(TELA_FUNDO, (largura_escalada, ALTURA_JANELA))
+        recorte = pygame.Rect(0, 0, LARGURA_JANELA, ALTURA_JANELA)
+        recorte.centerx = largura_escalada // 2
+        return escalado.subsurface(recorte).copy()
 
     def _iniciar_musica(self) -> None:
         """Carrega e toca a música de fundo em loop."""
@@ -108,15 +117,17 @@ class Jogo:
         )
         self.mouse = Hand(pygame.mouse.get_pos())
 
-        self.todas_as_sprites = add_sprites_grupo(
+        self.todas_as_sprites = pygame.sprite.LayeredUpdates()
+        self.todas_as_sprites.add(self.bixinho, layer=CAMADA_MUNDO)
+        self.todas_as_sprites.add(
             self.botao_sabao,
-            self.bixinho,
             self.botao_comida,
             self.barra_fome,
             self.barra_felicidade,
             self.barra_limpo,
-            self.mouse,
+            layer=CAMADA_INTERFACE,
         )
+        self.todas_as_sprites.add(self.mouse, layer=CAMADA_MOUSE)
         self.grupo_sabao = pygame.sprite.Group()
         self.grupo_comida = pygame.sprite.Group()
 
@@ -153,7 +164,7 @@ class Jogo:
             self.maca = Alimento(
                 randint(CARNE_X_MIN, CARNE_X_MAX), randint(CARNE_Y_MIN, CARNE_Y_MAX)
             )
-            self.todas_as_sprites.add(self.maca)
+            self.todas_as_sprites.add(self.maca, layer=CAMADA_MUNDO)
             self.grupo_comida.add(self.maca)
 
         if self.botao_sabao.rect.collidepoint(mouse_pos) and not self.grupo_sabao:
@@ -163,7 +174,7 @@ class Jogo:
         """Para o bixinho e faz as espumas surgirem girando em volta dele."""
         for i in range(QTD_ESPUMAS):
             espuma = Soap(self.bixinho, 2 * math.pi * i / QTD_ESPUMAS)
-            self.todas_as_sprites.add(espuma)
+            self.todas_as_sprites.add(espuma, layer=CAMADA_MUNDO)
             self.grupo_sabao.add(espuma)
         self.continua_andando = False
         self.bixinho.newx = self.bixinho.rect.x
@@ -269,13 +280,8 @@ class Jogo:
         """Desenha fundo, relógio e sprites na tela."""
         self.tela.fill(PRETO)
         self.tela.blit(self.fundo, (0, 0))
-        self.tela.blit(self._renderizar_hora(), POSICAO_RELOGIO)
         self.todas_as_sprites.draw(self.tela)
         pygame.display.flip()
-
-    def _renderizar_hora(self) -> pygame.Surface:
-        hora_em_texto = datetime.now().strftime("%H:%M")
-        return FONTE_CS.render(hora_em_texto, True, BRANCO)
 
     # ------------------------------------------------------------------- loop
 

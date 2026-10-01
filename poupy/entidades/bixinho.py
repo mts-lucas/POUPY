@@ -28,6 +28,7 @@ MARGEM_DIREITA = 240
 
 STATUS_INICIAL = 150.00
 INTERVALO_TIMER_MS = 5000
+INTERVALO_DECAIMENTO_MS = 8000
 
 
 class Acao(IntEnum):
@@ -85,8 +86,9 @@ class Poupy(pygame.sprite.Sprite):
         self.timer_andar = pygame.USEREVENT + 1
         self.descer_fome = pygame.USEREVENT + 4
         self.descer_limpeza = pygame.USEREVENT + 5
-        for evento in (self.timer_andar, self.descer_fome, self.descer_limpeza):
-            pygame.time.set_timer(evento, INTERVALO_TIMER_MS)
+        pygame.time.set_timer(self.timer_andar, INTERVALO_TIMER_MS)
+        for evento in (self.descer_fome, self.descer_limpeza):
+            pygame.time.set_timer(evento, INTERVALO_DECAIMENTO_MS)
 
     @staticmethod
     def _criar_animacoes() -> dict[Acao, Animacao]:

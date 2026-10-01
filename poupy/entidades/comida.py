@@ -10,7 +10,7 @@ from poupy.constantes import (
 )
 
 LADO_QUADRO = 24
-ESCALA = 2
+ESCALA = 3
 LADO_FINAL = LADO_QUADRO * ESCALA
 QUADROS_COMIDA = 6
 QUADROS_PUFT = 7

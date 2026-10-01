@@ -5,7 +5,7 @@ import pygame
 from poupy.constantes import SPRITE_SABAO, ler_imagens
 
 LADO_QUADRO = 24
-ESCALA = 2
+ESCALA = 3
 LADO_FINAL = LADO_QUADRO * ESCALA
 QUADROS_SABAO = 6
 PRIMEIRO_QUADRO_ESPUMA = 2
